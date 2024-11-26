@@ -1,13 +1,7 @@
 import FormInput from '@/components/form/FormInput';
 import { SubmitButton } from '@/components/form/FormButton';
 import FormContainer from '@/components/form/FormContainer';
-
-const signupAction = async (prevState:unknown, formData:FormData) => {
-    "use server"
-    const firstName = formData.get("firstName") as string;
-    console.log(firstName)
-    return {message:"Konts ir izveidots"}
-}
+import { signupAction } from '@/utils/actions';
 
 function SignUpPage() {
   return <section>
