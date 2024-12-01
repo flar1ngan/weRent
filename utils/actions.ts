@@ -1,6 +1,6 @@
 "use server";
 
-import { profileSchema } from "./schemas";
+import { profileSchema, zodValidate } from "./schemas";
 import db from "./db";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
@@ -11,17 +11,13 @@ export const signupAction = async (prevState: unknown, formData: FormData) => {
     const user = await currentUser();
     if (!user) throw new Error("kļūda");
     const data = Object.fromEntries(formData);
-    const validatedData = profileSchema.safeParse(data);
-    if (!validatedData.success) {
-        const errors = validatedData.error.errors.map((error) => error.message);
-        throw new Error(errors.join(", "));
-      }
+    const validatedData = zodValidate(profileSchema,data)
     await db.profile.create({
       data: {
         clerkId: user.id,
-        firstName: validatedData.data.firstName,
-        lastName: validatedData.data.lastName,
-        username: validatedData.data.username,
+        firstName: validatedData.firstName,
+        lastName: validatedData.lastName,
+        username: validatedData.username,
         email: user.emailAddresses[0].emailAddress,
         profileImg: user.imageUrl ?? "",
       },
@@ -78,19 +74,15 @@ export const updateProfile = async (
   const user = await getUser();
   try {
     const data = Object.fromEntries(formData);
-    const validatedData = profileSchema.safeParse(data);
-    if (!validatedData.success) {
-      const errors = validatedData.error.errors.map((error) => error.message);
-      throw new Error(errors.join(", "));
-    }
+    const validatedData = zodValidate(profileSchema,data)
     await db.profile.update({
       where: {
         clerkId: user.id,
       },
       data: {
-          firstName: validatedData.data.firstName,
-          lastName: validatedData.data.lastName,
-          username: validatedData.data.username,
+          firstName: validatedData.firstName,
+          lastName: validatedData.lastName,
+          username: validatedData.username,
       }
     });
     revalidatePath("/profile");
