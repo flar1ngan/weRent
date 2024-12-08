@@ -1,17 +1,18 @@
 "use server";
 
-import { profileSchema, zodValidate } from "./schemas";
+import { imageSchema, profileSchema, zodValidate } from "./schemas";
 import db from "./db";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { clerkClient, currentUser } from "@clerk/nextjs/server";
+import { uploadImage } from "./supabase";
 
 export const signupAction = async (prevState: unknown, formData: FormData) => {
   try {
     const user = await currentUser();
     if (!user) throw new Error("kļūda");
     const data = Object.fromEntries(formData);
-    const validatedData = zodValidate(profileSchema,data)
+    const validatedData = zodValidate(profileSchema, data);
     await db.profile.create({
       data: {
         clerkId: user.id,
@@ -74,19 +75,43 @@ export const updateProfile = async (
   const user = await getUser();
   try {
     const data = Object.fromEntries(formData);
-    const validatedData = zodValidate(profileSchema,data)
+    const validatedData = zodValidate(profileSchema, data);
     await db.profile.update({
       where: {
         clerkId: user.id,
       },
       data: {
-          firstName: validatedData.firstName,
-          lastName: validatedData.lastName,
-          username: validatedData.username,
-      }
+        firstName: validatedData.firstName,
+        lastName: validatedData.lastName,
+        username: validatedData.username,
+      },
     });
     revalidatePath("/profile");
     return { message: "Profils ir atjaunināts" };
+  } catch (error) {
+    return { message: error instanceof Error ? error.message : "kļūda" };
+  }
+};
+
+export const updateProfileImage = async (
+  prevState: any,
+  formData: FormData
+): Promise<{ message: string }> => {
+  const user = await getUser();
+  try {
+    const image = formData.get("image") as File;
+    const validatedData = zodValidate(imageSchema, { image });
+    const path = await uploadImage(validatedData.image);
+    await db.profile.update({
+      where: {
+        clerkId: user.id,
+      },
+      data: {
+        profileImg: path,
+      },
+    });
+    revalidatePath("/profile")
+    return { message: "Profila attēls ir veiksmīgi atjaunināts" };
   } catch (error) {
     return { message: error instanceof Error ? error.message : "kļūda" };
   }

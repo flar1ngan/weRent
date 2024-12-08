@@ -21,3 +21,20 @@ export const profileSchema = z.object({
     message: "Lietotājvārdam ir jābūt vismaz 2 simboli",
   }),
 });
+
+function validateImage() {
+  const maxSize = 1024 * 1024;
+  const fileTypes = ['image/'];
+  return z
+    .instanceof(File)
+    .refine((file) => {
+      return file.size <= maxSize || !file;
+    }, "Faila lielums nedrīkst pārsniegt 1 MB")
+    .refine((file) => {
+      return fileTypes.some((type) => file.type.startsWith(type)) || !file;
+    }, "Atlasītais fails nav attēls");
+}
+
+export const imageSchema = z.object({
+  image: validateImage(),
+});
