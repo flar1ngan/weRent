@@ -1,6 +1,6 @@
 "use server";
 
-import { imageSchema, profileSchema, zodValidate } from "./schemas";
+import { imageSchema, itemSchema, profileSchema, zodValidate } from "./schemas";
 import db from "./db";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
@@ -110,9 +110,34 @@ export const updateProfileImage = async (
         profileImg: path,
       },
     });
-    revalidatePath("/profile")
+    revalidatePath("/profile");
     return { message: "Profila attēls ir veiksmīgi atjaunināts" };
   } catch (error) {
     return { message: error instanceof Error ? error.message : "kļūda" };
   }
+};
+
+export const createItem = async (
+  prevState: any,
+  formData: FormData
+): Promise<{ message: string }> => {
+  const user = await getUser();
+  try {
+    const data = Object.fromEntries(formData);
+    const image = formData.get("image") as File;
+    const validatedData = zodValidate(itemSchema, data);
+    const validatedImage = zodValidate(imageSchema, {image:image});
+    const path = await uploadImage(validatedImage.image);
+
+    await db.item.create({
+      data: {
+        ...validatedData,
+        image: path,
+        profileId: user.id,
+      },
+    });
+  } catch (error) {
+    return { message: error instanceof Error ? error.message : "kļūda" };
+  }
+  redirect("/");
 };

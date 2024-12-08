@@ -18,4 +18,19 @@ model Profile {
   profileImg String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  items      Item[]
+}
+
+model Item {
+  id          String   @id @default(uuid())
+  name        String
+  category    String
+  image       String
+  description String
+  city        String
+  price       Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  profile     Profile  @relation(fields: [profileId], references: [clerkId])
+  profileId   String
 }

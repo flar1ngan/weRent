@@ -1,9 +1,10 @@
 type NavLink = {
-    href: string;
-    label: string;
-  };
-  
-  export const links: NavLink[] = [
-    { href: '/', label: 'sākums' },
-    { href: '/profile ', label: 'profils' },
-  ];
+  href: string;
+  label: string;
+};
+
+export const links: NavLink[] = [
+  { href: "/", label: "sākums" },
+  { href: "/profile ", label: "profils" },
+  { href: "items/create", label: "izveidot slūdinājumu" },
+];

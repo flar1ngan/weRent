@@ -38,3 +38,29 @@ function validateImage() {
 export const imageSchema = z.object({
   image: validateImage(),
 });
+
+
+export const itemSchema = z.object({
+  name: z
+    .string()
+    .min(2, {
+      message: 'Nosaukumam ir jābūt vismaz 2 rakstzīmes',
+    })
+    .max(100, {
+      message: 'Nosaukumam ir jābūt mazākam par 100 rakstzīmēm',
+    }),
+  price: z.coerce.number().int().min(0, {
+    message: 'Cenai jābūt pozitīvam skaitlim',
+  }),
+  category: z.string(),
+  city: z.string(),
+  description: z.string().refine(
+    (description) => {
+      const wordCount = description.split(' ').length;
+      return wordCount >= 10 && wordCount <= 500;
+    },
+    {
+      message: 'Aprakstam ir jābūt no 10 līdz 500 vārdiem.',
+    }
+  )
+});
