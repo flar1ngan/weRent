@@ -11,7 +11,7 @@ function Categories({
   const searchVar = search ? `&search=${search}` : "";
   return (
     <section>
-        <div className="flex flex-col gap-y-2 items-start">
+        <div className="flex justify-between items-start">
           {categories.map((item) => {
             const isActive = item.label === category;
             return (
@@ -21,7 +21,7 @@ function Categories({
                     isActive ? "text-primary" : ""
                   }`}
                 >
-                  <p className="capitalize text-sm mt-1">{item.label}</p>
+                  <p className="capitalize text-sm">{item.label}</p>
                 </article>
               </Link>
             );

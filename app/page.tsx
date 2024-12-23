@@ -1,5 +1,5 @@
 import Categories from "@/components/home/Categories";
-import PropertiesContainer from "@/components/home/PropertiesContainer";
+import ItemsContainer from "@/components/home/ItemsContainer";
 import { Button } from "@/components/ui/button";
 
 function HomePage({
@@ -14,7 +14,7 @@ function HomePage({
         category={searchParams.category}
         search={searchParams.search}
       />
-      <PropertiesContainer
+      <ItemsContainer
         category={searchParams.category}
         search={searchParams.search}
       />
