@@ -126,7 +126,7 @@ export const createItem = async (
     const data = Object.fromEntries(formData);
     const image = formData.get("image") as File;
     const validatedData = zodValidate(itemSchema, data);
-    const validatedImage = zodValidate(imageSchema, {image:image});
+    const validatedImage = zodValidate(imageSchema, { image: image });
     const path = await uploadImage(validatedImage.image);
 
     await db.item.create({
@@ -140,4 +140,33 @@ export const createItem = async (
     return { message: error instanceof Error ? error.message : "kļūda" };
   }
   redirect("/");
+};
+
+export const getItems = async ({
+  search = "",
+  category,
+}: {
+  search?: string;
+  category?: string;
+}) => {
+  const items = await db.item.findMany({
+    where: {
+      category,
+      OR: [
+        { name: { contains: search, mode: "insensitive" } },
+        { category: { contains: search, mode: "insensitive" } },
+      ],
+    },
+    select: {
+      id: true,
+      name: true,
+      price: true,
+      city: true,
+      image: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  return items;
 };
