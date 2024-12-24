@@ -64,3 +64,9 @@ export const itemSchema = z.object({
     }
   )
 });
+
+export const reviewSchema = z.object({
+  itemId:z.string(),
+  rating:z.coerce.number().int().min(1).max(5),
+  comment:z.string().min(10).max(750),
+})

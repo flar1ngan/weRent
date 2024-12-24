@@ -14,7 +14,7 @@ function FormDescriptionInput({
 }: DescriptionInputProps) {
   return (
     <div className="mb-2">
-      <Label htmlFor={name} className="capitalize">
+      <Label htmlFor={name}>
         {labelText || name}
       </Label>
       <Textarea

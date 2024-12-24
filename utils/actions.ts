@@ -1,6 +1,12 @@
 "use server";
 
-import { imageSchema, itemSchema, profileSchema, zodValidate } from "./schemas";
+import {
+  imageSchema,
+  itemSchema,
+  profileSchema,
+  reviewSchema,
+  zodValidate,
+} from "./schemas";
 import db from "./db";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
@@ -208,7 +214,9 @@ export const toggleFavorite = async (prevState: {
       });
     }
     revalidatePath(currentPathname);
-    return { message: favoriteId ? "Dzēsts no favorītu" : "Saglabāts favorītos" };
+    return {
+      message: favoriteId ? "Dzēsts no favorītu" : "Saglabāts favorītos",
+    };
   } catch (error) {
     return { message: error instanceof Error ? error.message : "kļūda" };
   }
@@ -232,16 +240,119 @@ export const getFavorites = async () => {
       },
     },
   });
-  return favorites.map((favorite)=> favorite.item)
+  return favorites.map((favorite) => favorite.item);
 };
 
-export const getItemDetails = (id:string) => {
+export const getItemDetails = (id: string) => {
   return db.item.findUnique({
-    where:{
-      id
+    where: {
+      id,
     },
-    include:{
+    include: {
       profile: true,
+    },
+  });
+};
+
+export const createReview = async (prevState: any, formData: FormData) => {
+  const user = await getUser();
+  try {
+    const data = Object.fromEntries(formData);
+    const validatedData = zodValidate(reviewSchema, data);
+    await db.review.create({
+      data: {
+        ...validatedData,
+        profileId: user.id,
+      },
+    });
+    revalidatePath(`/items/${validatedData.itemId}`);
+    return { message: "Atsauksme ir publicēta" };
+  } catch (error) {
+    return { message: error instanceof Error ? error.message : "kļūda" };
+  }
+};
+
+export const getItemReviews = async (itemId: string) => {
+  const reviews = await db.review.findMany({
+    where: {
+      itemId,
+    },
+    select: {
+      id: true,
+      rating: true,
+      comment: true,
+      profile: {
+        select: {
+          firstName: true,
+          profileImg: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  return reviews;
+};
+
+export const deleteReview = async (prevState: {
+  reviewId: string;
+  currentPathname: string;
+}) => {
+  const { reviewId, currentPathname } = prevState;
+  const user = await getUser();
+  try {
+    await db.review.delete({
+      where: {
+        id: reviewId,
+        profileId: user.id,
+      },
+    });
+    revalidatePath(currentPathname);
+    return { message: "Atsauksme ir veiksmīgi izdzēsta" };
+  } catch (error) {
+    return { message: error instanceof Error ? error.message : "kļūda" };
+  }
+};
+
+export const checkAuthor = async (reviewId: string) => {
+  const user = await currentUser();
+  try {
+    const review = await db.review.findUnique({
+      where: {
+        id: reviewId,
+      },
+    });
+    return user?.id === review?.profileId;
+  } catch (error) {
+    return { message: error instanceof Error ? error.message : "kļūda" };
+  }
+};
+
+export async function getItemRating(itemId: string) {
+  const result = await db.review.groupBy({
+    by: ["itemId"],
+    _avg: {
+      rating: true,
+    },
+    _count: {
+      rating: true,
+    },
+    where: {
+      itemId,
+    },
+  });
+  return {
+    rating: result[0]?._avg.rating?.toFixed() ?? 0,
+    count: result[0]?._count.rating ?? 0,
+  };
+}
+
+export const checkExistingReview = async (userId:string, itemId:string) => {
+  return db.review.findFirst({
+    where:{
+      profileId:userId,
+      itemId:itemId,
     }
   })
 }
