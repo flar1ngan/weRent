@@ -1,7 +1,6 @@
-import { checkAuthor, getItemReviews } from "@/utils/actions";
+import { getItemReviews } from "@/utils/actions";
 import SectionName from "../items/SectionName";
 import ReviewCard from "./ReviewCard";
-import DeleteReview from "./DeleteReview";
 
 async function ReviewList({ itemId }: { itemId: string }) {
   const reviews = await getItemReviews(itemId);
