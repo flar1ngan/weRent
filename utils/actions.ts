@@ -208,7 +208,7 @@ export const toggleFavorite = async (prevState: {
       });
     }
     revalidatePath(currentPathname);
-    return { message: favoriteId ? "Saglabāts favorītos" : "Dzēsts no favorītu" };
+    return { message: favoriteId ? "Dzēsts no favorītu" : "Saglabāts favorītos" };
   } catch (error) {
     return { message: error instanceof Error ? error.message : "kļūda" };
   }
@@ -234,3 +234,14 @@ export const getFavorites = async () => {
   });
   return favorites.map((favorite)=> favorite.item)
 };
+
+export const getItemDetails = (id:string) => {
+  return db.item.findUnique({
+    where:{
+      id
+    },
+    include:{
+      profile: true,
+    }
+  })
+}
