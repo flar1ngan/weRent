@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import Name from "./Name";
 import ItemRating from "./ItemRating";
 import FavoriteButton from "./FavoriteButton";
 import { ItemCardType } from "@/utils/types";

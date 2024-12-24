@@ -1,7 +1,6 @@
 import LoadingCard from "@/components/card/LoadingCard";
 import Categories from "@/components/home/Categories";
 import ItemsContainer from "@/components/home/ItemsContainer";
-import { Button } from "@/components/ui/button";
 import { Suspense } from "react";
 
 function HomePage({
