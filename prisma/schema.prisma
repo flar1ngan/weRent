@@ -9,28 +9,42 @@ generator client {
 }
 
 model Profile {
-  id         String   @id @default(uuid())
-  clerkId    String   @unique
+  id         String     @id @default(uuid())
+  clerkId    String     @unique
   firstName  String
   lastName   String
   username   String
   email      String
   profileImg String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
   items      Item[]
+  favorites  Favorite[]
 }
 
 model Item {
-  id          String   @id @default(uuid())
+  id          String     @id @default(uuid())
   name        String
   category    String
   image       String
   description String
   city        String
   price       Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  profile     Profile  @relation(fields: [profileId], references: [clerkId])
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  profile     Profile    @relation(fields: [profileId], references: [clerkId])
   profileId   String
+  favorites   Favorite[]
+}
+
+model Favorite {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  profile   Profile @relation(fields: [profileId], references: [clerkId], onDelete: Cascade)
+  profileId String
+
+  item   Item   @relation(fields: [itemId], references: [id])
+  itemId String
 }

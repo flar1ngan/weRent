@@ -170,3 +170,67 @@ export const getItems = async ({
   });
   return items;
 };
+
+export const getFavoriteId = async ({ itemId }: { itemId: string }) => {
+  const user = await getUser();
+  const favorite = await db.favorite.findFirst({
+    where: {
+      itemId,
+      profileId: user.id,
+    },
+    select: {
+      id: true,
+    },
+  });
+  return favorite?.id || null;
+};
+
+export const toggleFavorite = async (prevState: {
+  itemId: string;
+  favoriteId: string | null;
+  currentPathname: string;
+}) => {
+  const user = await getUser();
+  const { itemId, favoriteId, currentPathname } = prevState;
+  try {
+    if (favoriteId) {
+      await db.favorite.delete({
+        where: {
+          id: favoriteId,
+        },
+      });
+    } else {
+      await db.favorite.create({
+        data: {
+          itemId,
+          profileId: user.id,
+        },
+      });
+    }
+    revalidatePath(currentPathname);
+    return { message: favoriteId ? "Saglabāts favorītos" : "Dzēsts no favorītu" };
+  } catch (error) {
+    return { message: error instanceof Error ? error.message : "kļūda" };
+  }
+};
+
+export const getFavorites = async () => {
+  const user = await getUser();
+  const favorites = await db.favorite.findMany({
+    where: {
+      profileId: user.id,
+    },
+    select: {
+      item: {
+        select: {
+          id: true,
+          name: true,
+          city: true,
+          price: true,
+          image: true,
+        },
+      },
+    },
+  });
+  return favorites.map((favorite)=> favorite.item)
+};
