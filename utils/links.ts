@@ -6,6 +6,6 @@ type NavLink = {
 export const links: NavLink[] = [
   { href: "/", label: "sākums" },
   { href: "/profile ", label: "profils" },
-  { href: "items/create", label: "izveidot slūdinājumu" },
+  { href: "/rent/create", label: "izveidot slūdinājumu" },
   { href: "/favorites", label: "favorīti" },
 ];
