@@ -13,6 +13,7 @@ import { revalidatePath } from "next/cache";
 import { clerkClient, currentUser } from "@clerk/nextjs/server";
 import { uploadImage } from "./supabase";
 import { calculateTotal } from "./calendar";
+import { previousDay, previousThursday } from "date-fns";
 
 export const signupAction = async (prevState: unknown, formData: FormData) => {
   try {
@@ -425,20 +426,123 @@ export const getReservations = async () => {
   return reservations;
 };
 
-export const deleteReservation = async (prevState:{rentId:string}) => {
-  const {rentId} = prevState
-  const user = await getUser()
+export const deleteReservation = async (prevState: { rentId: string }) => {
+  const { rentId } = prevState;
+  const user = await getUser();
   try {
     const result = await db.rent.delete({
-      where:{
-        id:rentId,
-        profileId: user.id
-      }
-    })
+      where: {
+        id: rentId,
+        profileId: user.id,
+      },
+    });
     revalidatePath("/reservations");
-    return {message:"Rezervācija ir veiksmīgi izdzēsta"}
+    return { message: "Rezervācija ir veiksmīgi izdzēsta" };
   } catch (error) {
     return { message: error instanceof Error ? error.message : "kļūda" };
   }
+};
 
+export const deleteItem = async (prevState: { itemId: string }) => {
+  const { itemId } = prevState;
+  const user = await getUser();
+  try {
+    await db.item.delete({
+      where: {
+        id: itemId,
+        profileId: user.id,
+      },
+    });
+    revalidatePath("/items");
+    return { message: "Sludinājums ir veiksmīgi izdzēsts" };
+  } catch (error) {
+    return { message: error instanceof Error ? error.message : "kļūda" };
+  }
+};
+
+export const getUserItems = async () => {
+  const user = await getUser();
+  const items = await db.item.findMany({
+    where: {
+      profileId: user.id,
+    },
+    select: {
+      id: true,
+      name: true,
+      price: true,
+    },
+  });
+  const itemsWithReservations = await Promise.all(
+    items.map(async (item) => {
+      const totalPriceSum = await db.rent.aggregate({
+        where: {
+          itemId: item.id,
+        },
+        _sum: {
+          totalPrice: true,
+        },
+      });
+      return {
+        ...item,
+        totalPriceSum: totalPriceSum._sum.totalPrice,
+      };
+    })
+  );
+  return itemsWithReservations;
+};
+
+export const getRentDetails = async (itemId: string) => {
+  const user = await getUser();
+  return db.item.findUnique({
+    where: {
+      id: itemId,
+      profileId: user.id,
+    },
+  });
+};
+
+export const updateItem = async (prevState:any, formData:FormData):Promise<{message:string}> => {
+  const user = await getUser()
+  const itemId = formData.get("id") as string
+  try {
+    const data = Object.fromEntries(formData);
+    const validatedData = zodValidate(itemSchema,data);
+    await db.item.update({
+      where:{
+        id:itemId,
+        profileId:user.id
+      },
+      data:{
+        ...validatedData
+      }
+    })
+    revalidatePath(`/rent/${itemId}/edit`)
+    return {message:"Sludinājums ir veiksmīgi rediģēts"}
+  } catch (error) {
+    return { message: error instanceof Error ? error.message : "kļūda" };
+  }
+}
+
+export const updateItemImage = async (prevState:any, formData:FormData):Promise<{message:string}> => {
+  const user = await getUser()
+  const itemId = formData.get("id") as string;
+  try {
+    const image = formData.get("image") as File
+    const validatedData = zodValidate(imageSchema,{image})
+    const path = await uploadImage(validatedData.image)
+    await db.item.update({
+      where:{
+        id:itemId,
+        profileId:user.id
+      },
+      data: {
+        image:path
+      }
+    });
+    revalidatePath(`/rent/${itemId}/edit`)
+    return {message: "Attēls ir veiksmīgi atjaunināts"}
+
+  } catch (error) {
+    return { message: error instanceof Error ? error.message : "kļūda" };
+  }
 }
