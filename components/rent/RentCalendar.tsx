@@ -27,7 +27,7 @@ function RentCalendar() {
   const takenDates = getBlockedDates(blockedPeriods)
   useEffect(() => {
     const selectedRange = getDateRange(range)
-    const isBlockedDate = selectedRange.some((date)=>{
+    selectedRange.some((date)=>{
       if(takenDates[date]){
         setRange(defaultSelected)
         toast({
