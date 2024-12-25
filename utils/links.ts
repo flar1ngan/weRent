@@ -10,4 +10,5 @@ export const links: NavLink[] = [
   { href: "/favorites", label: "favorīti" },
   { href: "/reservations", label: "Rezervācijas" },
   { href: "/rent", label: "Mani sludinājumi" },
+  { href: "/admin", label: "Admin" },
 ];

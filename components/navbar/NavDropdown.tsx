@@ -5,6 +5,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu";
+import {auth} from "@clerk/nextjs/server"
 
 import Link from "next/link";
 import { Button } from "../ui/button";
@@ -14,6 +15,8 @@ import SignOut from "./SignOut";
 import { SignedOut, SignedIn, SignInButton, SignUpButton } from "@clerk/nextjs";
 
 function LinksDropdown() {
+  const {userId} = auth()
+  const isAdmin = userId === process.env.ADMIN_USER_ID
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -38,6 +41,7 @@ function LinksDropdown() {
         </SignedOut>
         <SignedIn>
         {links.map((link) => {
+          if(link.label==="Admin" && !isAdmin) return null;
           return (
             <DropdownMenuItem key={link.href}>
               <Link href={link.href} className="w-full capitalize">

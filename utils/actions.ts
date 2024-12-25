@@ -10,7 +10,7 @@ import {
 import db from "./db";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { clerkClient, currentUser } from "@clerk/nextjs/server";
+import { clerkClient, currentUser, getAuth } from "@clerk/nextjs/server";
 import { uploadImage } from "./supabase";
 import { calculateTotal } from "./calendar";
 import { previousDay, previousThursday } from "date-fns";
@@ -62,6 +62,12 @@ const getUser = async () => {
     throw new Error("kļūda");
   }
   if (!user.privateMetadata.profileExist) redirect("/profile/signup");
+  return user;
+};
+
+const getAdminUser = async () => {
+  const user = await getUser();
+  if (user.id !== process.env.ADMIN_USER_ID) redirect("/");
   return user;
 };
 
@@ -501,48 +507,95 @@ export const getRentDetails = async (itemId: string) => {
   });
 };
 
-export const updateItem = async (prevState:any, formData:FormData):Promise<{message:string}> => {
-  const user = await getUser()
-  const itemId = formData.get("id") as string
-  try {
-    const data = Object.fromEntries(formData);
-    const validatedData = zodValidate(itemSchema,data);
-    await db.item.update({
-      where:{
-        id:itemId,
-        profileId:user.id
-      },
-      data:{
-        ...validatedData
-      }
-    })
-    revalidatePath(`/rent/${itemId}/edit`)
-    return {message:"Sludinājums ir veiksmīgi rediģēts"}
-  } catch (error) {
-    return { message: error instanceof Error ? error.message : "kļūda" };
-  }
-}
-
-export const updateItemImage = async (prevState:any, formData:FormData):Promise<{message:string}> => {
-  const user = await getUser()
+export const updateItem = async (
+  prevState: any,
+  formData: FormData
+): Promise<{ message: string }> => {
+  const user = await getUser();
   const itemId = formData.get("id") as string;
   try {
-    const image = formData.get("image") as File
-    const validatedData = zodValidate(imageSchema,{image})
-    const path = await uploadImage(validatedData.image)
+    const data = Object.fromEntries(formData);
+    const validatedData = zodValidate(itemSchema, data);
     await db.item.update({
-      where:{
-        id:itemId,
-        profileId:user.id
+      where: {
+        id: itemId,
+        profileId: user.id,
       },
       data: {
-        image:path
-      }
+        ...validatedData,
+      },
     });
-    revalidatePath(`/rent/${itemId}/edit`)
-    return {message: "Attēls ir veiksmīgi atjaunināts"}
-
+    revalidatePath(`/rent/${itemId}/edit`);
+    return { message: "Sludinājums ir veiksmīgi rediģēts" };
   } catch (error) {
     return { message: error instanceof Error ? error.message : "kļūda" };
   }
-}
+};
+
+export const updateItemImage = async (
+  prevState: any,
+  formData: FormData
+): Promise<{ message: string }> => {
+  const user = await getUser();
+  const itemId = formData.get("id") as string;
+  try {
+    const image = formData.get("image") as File;
+    const validatedData = zodValidate(imageSchema, { image });
+    const path = await uploadImage(validatedData.image);
+    await db.item.update({
+      where: {
+        id: itemId,
+        profileId: user.id,
+      },
+      data: {
+        image: path,
+      },
+    });
+    revalidatePath(`/rent/${itemId}/edit`);
+    return { message: "Attēls ir veiksmīgi atjaunināts" };
+  } catch (error) {
+    return { message: error instanceof Error ? error.message : "kļūda" };
+  }
+};
+
+export const getReservationList = async () => {
+  const user = await getUser();
+  const reservations = await db.rent.findMany({
+    where: {
+      item: {
+        profileId: user.id,
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    include: {
+      item: {
+        select: {
+          id: true,
+          name: true,
+          price: true,
+          city: true,
+        },
+      },
+      profile: {
+        select: {
+          firstName: true,
+          lastName: true,
+        },
+      },
+    },
+  });
+  return reservations;
+};
+
+export const getStats = async () => {
+  await getAdminUser();
+  const usersCount = await db.profile.count();
+  const itemsCount = await db.item.count();
+  const reservationsCount = await db.rent.count();
+
+  return {
+    usersCount, itemsCount,reservationsCount
+  }
+};
