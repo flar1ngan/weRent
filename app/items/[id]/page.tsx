@@ -2,7 +2,6 @@ import FavoriteButton from "@/components/card/FavoriteButton";
 import ItemRating from "@/components/card/ItemRating";
 import Breadcrumbs from "@/components/items/Breadcrumbs";
 import ImageContainer from "@/components/items/ImageContainer";
-import RentCalendar from "@/components/items/RentCalendar";
 import UserInfo from "@/components/items/UserInfo";
 import { Separator } from "@/components/ui/separator";
 import { getItemDetails, checkExistingReview } from "@/utils/actions";
@@ -11,6 +10,16 @@ import { redirect } from "next/navigation";
 import SubmitReview from "@/components/reviews/SubmitReview";
 import ReviewList from "@/components/reviews/ReviewList";
 import { auth } from "@clerk/nextjs/server";
+import dynamic from "next/dynamic";
+import { Skeleton } from "@/components/ui/skeleton";
+
+const DynamicRentWrapper = dynamic(
+  () => import("@/components/rent/RentWrapper"),
+  {
+    ssr: false,
+    loading: () => <Skeleton className="h-[200px] w-full" />,
+  }
+);
 
 async function ItemPage({ params }: { params: { id: string } }) {
   const item = await getItemDetails(params.id);
@@ -42,7 +51,11 @@ async function ItemPage({ params }: { params: { id: string } }) {
           <Description description={item.description} />
         </div>
         <div className="lg:col-span-4 flex flex-col items-center">
-          <RentCalendar />
+          <DynamicRentWrapper
+            itemId={item.id}
+            price={item.price}
+            rents={item.rents}
+          />
         </div>
       </section>
       {reviewMissing && <SubmitReview itemId={item.id} />}

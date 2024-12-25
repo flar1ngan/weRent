@@ -21,6 +21,7 @@ model Profile {
   items      Item[]
   favorites  Favorite[]
   reviews    Review[]
+  rents      Rent[]
 }
 
 model Item {
@@ -37,6 +38,7 @@ model Item {
   profileId   String
   favorites   Favorite[]
   reviews     Review[]
+  rents       Rent[]
 }
 
 model Favorite {
@@ -61,4 +63,19 @@ model Review {
   comment   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Rent {
+  id            String   @id @default(uuid())
+  profile       Profile  @relation(fields: [profileId], references: [clerkId], onDelete: Cascade)
+  profileId     String
+  item          Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  itemId        String
+  totalPrice         Int
+  totalDays          Int
+  startDate     DateTime
+  endDate       DateTime
+  paymentStatus Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }

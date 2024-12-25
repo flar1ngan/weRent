@@ -10,3 +10,14 @@ export type ItemCardType = {
   city: string;
   image: string;
 };
+
+export type DateRangeType = {
+  startDate: Date;
+  endDate: Date;
+  key: string;
+};
+
+export type RentType = {
+  startDate: Date;
+  endDate: Date;
+}

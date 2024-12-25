@@ -12,6 +12,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { clerkClient, currentUser } from "@clerk/nextjs/server";
 import { uploadImage } from "./supabase";
+import { calculateTotal } from "./calendar";
 
 export const signupAction = async (prevState: unknown, formData: FormData) => {
   try {
@@ -250,6 +251,12 @@ export const getItemDetails = (id: string) => {
     },
     include: {
       profile: true,
+      rents: {
+        select: {
+          startDate: true,
+          endDate: true,
+        },
+      },
     },
   });
 };
@@ -348,11 +355,90 @@ export async function getItemRating(itemId: string) {
   };
 }
 
-export const checkExistingReview = async (userId:string, itemId:string) => {
+export const checkExistingReview = async (userId: string, itemId: string) => {
   return db.review.findFirst({
-    where:{
-      profileId:userId,
-      itemId:itemId,
-    }
-  })
+    where: {
+      profileId: userId,
+      itemId: itemId,
+    },
+  });
+};
+
+export const createRent = async (prevState: {
+  itemId: string;
+  startDate: Date;
+  endDate: Date;
+}) => {
+  const user = await getUser();
+  const { itemId, startDate, endDate } = prevState;
+  const item = await db.item.findUnique({
+    where: {
+      id: itemId,
+    },
+    select: {
+      price: true,
+    },
+  });
+  if (!item) {
+    return { message: "Priekšmets nav atrasts" };
+  }
+  const { totalPrice, totalDays } = calculateTotal({
+    startDate,
+    endDate,
+    price: item.price,
+  });
+  try {
+    const rent = await db.rent.create({
+      data: {
+        startDate,
+        endDate,
+        totalDays,
+        totalPrice,
+        profileId: user.id,
+        itemId,
+      },
+    });
+  } catch (error) {
+    return { message: error instanceof Error ? error.message : "kļūda" };
+  }
+  redirect("/reservations");
+};
+
+export const getReservations = async () => {
+  const user = await getUser();
+  const reservations = await db.rent.findMany({
+    where: {
+      profileId: user.id,
+    },
+    include: {
+      item: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  return reservations;
+};
+
+export const deleteReservation = async (prevState:{rentId:string}) => {
+  const {rentId} = prevState
+  const user = await getUser()
+  try {
+    const result = await db.rent.delete({
+      where:{
+        id:rentId,
+        profileId: user.id
+      }
+    })
+    revalidatePath("/reservations");
+    return {message:"Rezervācija ir veiksmīgi izdzēsta"}
+  } catch (error) {
+    return { message: error instanceof Error ? error.message : "kļūda" };
+  }
+
 }
