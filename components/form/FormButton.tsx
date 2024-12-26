@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { SignInButton } from "@clerk/nextjs";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { LuTrash2, LuPenSquare } from "react-icons/lu";
+import { redirect } from "next/navigation";
 
 type ButtonSize = "default" | "sm" | "lg";
 
@@ -96,3 +97,9 @@ export const IconButton = ({ actionType }: { actionType: actionType }) => {
     </Button>
   );
 };
+
+export const UpdateProfileButton = () => {
+  return <Button variant="default" size="lg" onClick={()=>{
+    redirect("/")
+  }}>text</Button>
+}

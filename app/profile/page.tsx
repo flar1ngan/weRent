@@ -1,25 +1,34 @@
-import FormContainer from "@/components/form/FormContainer";
-import FormInput from "@/components/form/FormInput";
-import { updateProfile, getProfile, updateProfileImage } from "@/utils/actions";
-import { SubmitButton } from "@/components/form/FormButton";
-import FormImageContainer from "@/components/form/FormImageContainer";
+import { getAllUserItems, getProfile } from "@/utils/actions";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import ItemsList from "@/components/home/ItemsList";
+
 async function Profile() {
   const profile = await getProfile();
+  const items = await getAllUserItems(profile.id)
   return (
     <section>
-      <h1 className="capitalize text-2xl font-semibold mb-8">Profils</h1>
-      <div className="border p-8 rounded-md max-w-lg">
-
-        <FormImageContainer image={profile.profileImg} name={profile.username} action={updateProfileImage} text="Atjaunināt profila attēlu" />
-        <FormContainer action={updateProfile}>
-          <div className="grid gap-4 mt-4">
-            <FormInput type="text" name="firstName" label="Vārds" defaultValue={profile.firstName}/>
-            <FormInput type="text" name="lastName" label="Uzvārds" defaultValue={profile.lastName} />
-            <FormInput type="text" name="username" label="Lietotājvārds" defaultValue={profile.username}/>
-          </div>
-          <SubmitButton text="Atjaunināt profilu" className="mt-8" />
-        </FormContainer>
+      <div className="flex gap-x-4">
+        <Image
+          src={profile.profileImg}
+          alt="Profila attēls"
+          width={256}
+          height={256}
+          className="object-cover rounded mb-2"
+        />
+        <div>
+          <p className="text-3xl font-semibold">{profile.firstName + " " + profile.lastName}</p>
+          <p className="mb-8">@{profile.username}</p>
+          <Link href="/profile/update">
+            <Button variant="default" size="lg">
+              Rediģēt profilu
+            </Button>
+          </Link>
+        </div>
       </div>
+      <h1 className="capitalize text-2xl font-semibold mb-8 mt-16">Lietotāja sludinājumi:</h1>
+      <ItemsList items={items}/>
     </section>
   );
 }

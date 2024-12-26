@@ -617,3 +617,32 @@ export const getAllItems = async () => {
   });
   return items;
 };
+
+export const getAllUserItems= async (id:string) => {
+  const user = await db.profile.findFirst({
+    where:{
+      id
+    }
+  })
+  const items = await db.item.findMany({
+    where: {
+      profileId:user?.clerkId
+    },
+    select: {
+      id: true,
+      name: true,
+      price: true,
+      image: true,
+      city: true
+    },
+  });
+  return items
+}
+
+export const getUserDetails = async (id:string) => {
+  return db.profile.findUnique({
+    where:{
+      id,
+    }
+  })
+}
