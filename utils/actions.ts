@@ -13,7 +13,6 @@ import { revalidatePath } from "next/cache";
 import { clerkClient, currentUser, getAuth } from "@clerk/nextjs/server";
 import { uploadImage } from "./supabase";
 import { calculateTotal } from "./calendar";
-import { previousDay, previousThursday } from "date-fns";
 
 export const signupAction = async (prevState: unknown, formData: FormData) => {
   try {
@@ -455,8 +454,7 @@ export const deleteItem = async (prevState: { itemId: string }) => {
   try {
     await db.item.delete({
       where: {
-        id: itemId,
-        profileId: user.id,
+        id: itemId
       },
     });
     revalidatePath("/items");
@@ -596,6 +594,26 @@ export const getStats = async () => {
   const reservationsCount = await db.rent.count();
 
   return {
-    usersCount, itemsCount,reservationsCount
-  }
+    usersCount,
+    itemsCount,
+    reservationsCount,
+  };
+};
+
+export const getAllItems = async () => {
+  const items = await db.item.findMany({
+    select: {
+      id: true,
+      name: true,
+      price: true,
+      category: true,
+      profile: {
+        select: {
+          firstName: true,
+          lastName: true,
+        },
+      },
+    },
+  });
+  return items;
 };

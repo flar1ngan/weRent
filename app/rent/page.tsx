@@ -25,7 +25,6 @@ async function RentPage() {
     );
   }
   const reservations = await getReservationList();
-  if (reservations.length === 0) return <EmptyList />;
   return (
     <div className="mt-16">
       <h4 className="mb-4">Sludinājumi: {rents.length}</h4>
@@ -66,7 +65,7 @@ async function RentPage() {
         </TableBody>
       </Table>
       <h4 className="mb-4 mt-12">
-        Jūsu sludinājumiu rezervācijas: {rents.length}
+        Jūsu sludinājumu rezervācijas: {reservations.length}
       </h4>
       <Table>
         <TableCaption>Saraksts ar jūsu sludinājumu rezervācijām</TableCaption>
