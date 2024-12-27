@@ -26,6 +26,7 @@ async function ItemPage({ params }: { params: { id: string } }) {
   if (!item) redirect("/");
   const firstName = item.profile.firstName;
   const profileImg = item.profile.profileImg;
+  const username = item.profile.username
 
   const { userId } = auth();
   const isNotOwner = item.profile.clerkId !== userId;
@@ -46,7 +47,7 @@ async function ItemPage({ params }: { params: { id: string } }) {
             <h1 className="text-xl font-bold">{item.name}</h1>
             <ItemRating inPage itemId={item.id} />
           </div>
-          <UserInfo profile={{ firstName, profileImg }} />
+          <UserInfo profile={{ username, firstName, profileImg }} />
           <Separator className="mt-4" />
           <Description description={item.description} />
         </div>

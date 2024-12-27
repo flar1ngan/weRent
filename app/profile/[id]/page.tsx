@@ -1,4 +1,4 @@
-import { getAllUserItems, getUserDetails } from "@/utils/actions";
+import { getAllUserItems, getProfile, getUserDetails } from "@/utils/actions";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -8,13 +8,12 @@ import { auth } from "@clerk/nextjs/server";
 
 async function ProfilePage({ params }: { params: { id: string } }) {
   const { userId } = auth();
-  console.log(userId);
   const profile = await getUserDetails(params.id);
   if (!profile) redirect("/");
   const items = await getAllUserItems(params.id);
   return (
     <section>
-      <div className="flex gap-x-4">
+      <div className="flex gap-x-6">
         <Image
           src={profile.profileImg}
           alt="Profila attēls"

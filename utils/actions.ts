@@ -618,10 +618,10 @@ export const getAllItems = async () => {
   return items;
 };
 
-export const getAllUserItems= async (id:string) => {
+export const getAllUserItems= async (username:string) => {
   const user = await db.profile.findFirst({
     where:{
-      id
+      username
     }
   })
   const items = await db.item.findMany({
@@ -639,10 +639,18 @@ export const getAllUserItems= async (id:string) => {
   return items
 }
 
-export const getUserDetails = async (id:string) => {
-  return db.profile.findUnique({
+export const getUserDetails = async (username:string) => {
+  return db.profile.findFirst({
     where:{
-      id,
+      username:username,
+    }
+  })
+}
+
+export const getUserDetailsById = async (id:string) => {
+  return db.profile.findFirst({
+    where:{
+      id:id,
     }
   })
 }

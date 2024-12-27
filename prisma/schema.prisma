@@ -13,7 +13,7 @@ model Profile {
   clerkId    String     @unique
   firstName  String
   lastName   String
-  username   String
+  username   String     @unique
   email      String
   profileImg String
   createdAt  DateTime   @default(now())
@@ -71,8 +71,8 @@ model Rent {
   profileId     String
   item          Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
   itemId        String
-  totalPrice         Int
-  totalDays          Int
+  totalPrice    Int
+  totalDays     Int
   startDate     DateTime
   endDate       DateTime
   paymentStatus Boolean  @default(false)

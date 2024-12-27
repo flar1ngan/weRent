@@ -9,7 +9,7 @@ async function Profile() {
   const items = await getAllUserItems(profile.id)
   return (
     <section>
-      <div className="flex gap-x-4">
+      <div className="flex gap-x-6">
         <Image
           src={profile.profileImg}
           alt="Profila attēls"

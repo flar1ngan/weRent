@@ -29,6 +29,7 @@ async function ReservationsPage() {
             <TableHead>Cena</TableHead>
             <TableHead>No</TableHead>
             <TableHead>Līdz</TableHead>
+            <TableHead>Līdz</TableHead>
             <TableHead>Darbības</TableHead>
           </TableRow>
         </TableHeader>
@@ -57,6 +58,7 @@ async function ReservationsPage() {
                 <TableCell>{totalDays}</TableCell>
                 <TableCell>{formatCurrency(totalPrice)}</TableCell>
                 <TableCell>{startDate}</TableCell>
+                <TableCell>{endDate}</TableCell>
                 <TableCell>{endDate}</TableCell>
                 <TableCell><DeleteReservation rentId={id}/></TableCell>
               </TableRow>
