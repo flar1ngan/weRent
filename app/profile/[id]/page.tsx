@@ -1,4 +1,4 @@
-import { getAllUserItems, getProfile, getUserDetails } from "@/utils/actions";
+import { getAllUserItems, getUserDetails } from "@/utils/actions";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
