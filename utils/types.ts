@@ -11,6 +11,14 @@ export type ItemCardType = {
   image: string;
 };
 
+export type UserCardType = {
+  id: string,
+  firstName: string,
+  lastName:string,
+  username:string
+  profileImg:string,
+}
+
 export type DateRangeType = {
   startDate: Date;
   endDate: Date;

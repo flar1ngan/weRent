@@ -22,6 +22,12 @@ export const profileSchema = z.object({
   }),
 });
 
+export const messageSchema = z.object({
+  senderId: z.string(),
+  receiverId: z.string(),
+  content: z.string()
+})
+
 function validateImage() {
   const maxSize = 1024 * 1024;
   const fileTypes = ['image/'];

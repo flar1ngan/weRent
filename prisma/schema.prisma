@@ -9,19 +9,21 @@ generator client {
 }
 
 model Profile {
-  id         String     @id @default(uuid())
-  clerkId    String     @unique
-  firstName  String
-  lastName   String
-  username   String     @unique
-  email      String
-  profileImg String
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-  items      Item[]
-  favorites  Favorite[]
-  reviews    Review[]
-  rents      Rent[]
+  id               String     @id @default(uuid())
+  clerkId          String     @unique
+  firstName        String
+  lastName         String
+  username         String     @unique
+  email            String
+  profileImg       String
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  items            Item[]
+  favorites        Favorite[]
+  reviews          Review[]
+  rents            Rent[]
+  messagesSent     Message[]  @relation("MessagesSent")
+  messagesReceived Message[]  @relation("MessagesReceived")
 }
 
 model Item {
@@ -78,4 +80,18 @@ model Rent {
   paymentStatus Boolean  @default(false)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+}
+
+model Message {
+  id         String   @id @default(uuid())
+  senderId   String
+  receiverId String
+  content    String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  sender   Profile @relation("MessagesSent", fields: [senderId], references: [clerkId])
+  receiver Profile @relation("MessagesReceived", fields: [receiverId], references: [clerkId])
+
+  @@index([senderId, receiverId, createdAt])
 }

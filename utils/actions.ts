@@ -3,6 +3,7 @@
 import {
   imageSchema,
   itemSchema,
+  messageSchema,
   profileSchema,
   reviewSchema,
   zodValidate,
@@ -454,7 +455,7 @@ export const deleteItem = async (prevState: { itemId: string }) => {
   try {
     await db.item.delete({
       where: {
-        id: itemId
+        id: itemId,
       },
     });
     revalidatePath("/items");
@@ -618,39 +619,92 @@ export const getAllItems = async () => {
   return items;
 };
 
-export const getAllUserItems= async (username:string) => {
+export const getAllUserItems = async (username: string) => {
   const user = await db.profile.findFirst({
-    where:{
-      username
-    }
-  })
+    where: {
+      username,
+    },
+  });
   const items = await db.item.findMany({
     where: {
-      profileId:user?.clerkId
+      profileId: user?.clerkId,
     },
     select: {
       id: true,
       name: true,
       price: true,
       image: true,
-      city: true
+      city: true,
     },
   });
-  return items
-}
+  return items;
+};
 
-export const getUserDetails = async (username:string) => {
+export const getUserDetails = async (username: string) => {
   return db.profile.findFirst({
-    where:{
-      username:username,
-    }
-  })
-}
+    where: {
+      username: username,
+    },
+  });
+};
 
-export const getUserDetailsById = async (id:string) => {
+export const getUserDetailsById = async (id: string) => {
   return db.profile.findFirst({
-    where:{
-      id:id,
-    }
-  })
-}
+    where: {
+      id: id,
+    },
+  });
+};
+
+export const getUserDetailsByClerkId = async (id: string) => {
+  return db.profile.findFirst({
+    where: {
+      clerkId: id,
+    },
+  });
+};
+
+export const getAllOtherUsers = async () => {
+  const user = await getUser();
+  return db.profile.findMany({
+    where: {
+      NOT: {
+        clerkId: user.id,
+      },
+    },
+  });
+};
+
+export const postMessage = async (formData: FormData): Promise<void> => {
+  const data = Object.fromEntries(formData);
+  const validatedData = zodValidate(messageSchema, data);
+  const { content, receiverId, senderId } = validatedData;
+  const receiver = await getUserDetailsByClerkId(receiverId)
+  if(!receiver) redirect("/chat")
+  await db.message.create({
+    data: {
+      senderId: senderId,
+      receiverId: receiverId,
+      content: content,
+    },
+  });
+  revalidatePath(`/chat/${receiver.username}`)
+};
+
+  export const getMessages = async(receiverUsername:string) => {
+    const user = await getUser()
+    const receiver = await getUserDetails(receiverUsername)
+    if(!receiver) redirect("/chat")
+    const messages = await db.message.findMany({
+      where:{
+        OR: [
+          {senderId:user.id, receiverId:receiver.clerkId},
+          {senderId:receiver.clerkId, receiverId: user.id}
+        ]
+      },
+      orderBy:{
+        createdAt:"asc"
+      }
+    })
+    return messages;
+  }
