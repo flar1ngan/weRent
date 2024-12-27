@@ -15,15 +15,17 @@ async function ChatPage({ params }: { params: { id: string } }) {
   const receiverId = receiverProfile?.clerkId;
   if (!userId || !receiverId) redirect("/");
   return (
-    <div className="flex min-w-screen max-h-[80vh]">
-        {/* <ScrollArea className="border-b"> */}
-
-      <UsersContainer />
-        {/* </ScrollArea> */}
-      {/* <div className="flex flex-col flex-grow"> */}
-        {/* <ChatContainer receiverUsername={receiverProfile.username} /> */}
-        {/* <ChatInput senderId={userId} receiverId={receiverId} /> */}
-      {/* </div> */}
+    <div className="flex h-[80vh]">
+      <div className="w-1/4 h-full border">
+        <UsersContainer />
+      </div>
+      <div className="w-3/4 flex flex-col">
+        <div className="h-16 border-t border-r p-4 font-semibold flex items-center">
+          Chat
+        </div>
+        <ChatContainer receiverUsername={receiverProfile.username} />
+        <ChatInput senderId={userId} receiverId={receiverId} />
+      </div>
     </div>
   );
 }
