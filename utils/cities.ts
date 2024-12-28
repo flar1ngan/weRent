@@ -1,24 +1,61 @@
 type City = {
-    label: string;
-  };
-  
-  export const cities: City[] = [
-    {
-      label: 'Rīga'
-    },
-    {
-      label: 'Salaspils',
-    },
-    {
-      label: 'Jēkabpils',
-    },
-    {
-      label: 'Ogre',
-    },
-    {
-      label: 'Daugavpils',
-    },
-    {
-      label: 'Jelgava',
-    },
-  ];
+  label: string;
+};
+
+export const cities: City[] = [
+  { label: 'Rīga' },
+  { label: 'Daugavpils' },
+  { label: 'Liepāja' },
+  { label: 'Jelgava' },
+  { label: 'Jūrmala' },
+  { label: 'Ventspils' },
+  { label: 'Rēzekne' },
+  { label: 'Valmiera' },
+  { label: 'Ogre' },
+  { label: 'Cēsis' },
+  { label: 'Salaspils' },
+  { label: 'Jēkabpils' },
+  { label: 'Tukums' },
+  { label: 'Madona' },
+  { label: 'Saldus' },
+  { label: 'Talsi' },
+  { label: 'Sigulda' },
+  { label: 'Līvāni' },
+  { label: 'Balvi' },
+  { label: 'Kuldīga' },
+  { label: 'Alūksne' },
+  { label: 'Gulbene' },
+  { label: 'Preiļi' },
+  { label: 'Bauska' },
+  { label: 'Valka' },
+  { label: 'Aizkraukle' },
+  { label: 'Smiltene' },
+  { label: 'Aizpute' },
+  { label: 'Dobele' },
+  { label: 'Limbaži' },
+  { label: 'Kandava' },
+  { label: 'Ikšķile' },
+  { label: 'Grobiņa' },
+  { label: 'Krāslava' },
+  { label: 'Ludza' },
+  { label: 'Mazsalaca' },
+  { label: 'Rūjiena' },
+  { label: 'Skrunda' },
+  { label: 'Aknīste' },
+  { label: 'Ape' },
+  { label: 'Ilūkste' },
+  { label: 'Jaunjelgava' },
+  { label: 'Kārsava' },
+  { label: 'Piltene' },
+  { label: 'Pļaviņas' },
+  { label: 'Priekule' },
+  { label: 'Sabile' },
+  { label: 'Saulkrasti' },
+  { label: 'Staicele' },
+  { label: 'Strenči' },
+  { label: 'Vaiņode' },
+  { label: 'Varakļāni' },
+  { label: 'Viesīte' },
+  { label: 'Viļaka' },
+  { label: 'Viļāni' }
+];

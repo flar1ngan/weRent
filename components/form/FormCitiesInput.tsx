@@ -21,16 +21,18 @@ function FormCitiesInput({ defaultValue }: { defaultValue?: string }) {
         name={name}
         required
       >
-        <SelectTrigger id={name}>
-          <SelectValue />
-        </SelectTrigger>
-            <SelectContent>
-                {cities.map((item)=>{
-                    return <SelectItem key={item.label} value={item.label}>
-                        {item.label}
-                    </SelectItem>
-                })}
-            </SelectContent>
+          <SelectTrigger id={name}>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent className="max-h-[30vh]">
+            {cities.map((item) => {
+              return (
+                <SelectItem key={item.label} value={item.label}>
+                  {item.label}
+                </SelectItem>
+              );
+            })}
+          </SelectContent>
       </Select>
     </div>
   );
