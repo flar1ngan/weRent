@@ -159,17 +159,54 @@ export const createItem = async (
 export const getItems = async ({
   search = "",
   category,
+  page = 1,
+  pageSize = 12,
 }: {
   search?: string;
   category?: string;
+  page?: number;
+  pageSize?: number;
 }) => {
+  const skip = (page - 1) * pageSize;
+  const take = pageSize;
+
+  const totalCount = await db.item.count({
+    where: {
+      OR: [
+        {
+          name: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+        {
+          category: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+      ],
+      ...(category ? { category } : {}),
+    },
+  });
+
   const items = await db.item.findMany({
     where: {
-      category,
       OR: [
-        { name: { contains: search, mode: "insensitive" } },
-        { category: { contains: search, mode: "insensitive" } },
+        {
+          name: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+        {
+          category: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
       ],
+      ...(category ? { category } : {}),
     },
     select: {
       id: true,
@@ -181,8 +218,10 @@ export const getItems = async ({
     orderBy: {
       createdAt: "desc",
     },
+    skip,
+    take,
   });
-  return items;
+  return { items, totalCount };
 };
 
 export const getFavoriteId = async ({ itemId }: { itemId: string }) => {
@@ -685,20 +724,16 @@ export const getAllOtherUsers = async () => {
   });
 };
 
-
 export const getAllOtherUsersSorted = async () => {
   const currentUser = await getUser();
   const currentClerkId = currentUser.id;
 
-  const allOtherUsers = await getAllOtherUsers()
-  
+  const allOtherUsers = await getAllOtherUsers();
+
   const grouped = await db.message.groupBy({
     by: ["senderId", "receiverId"],
     where: {
-      OR: [
-        { senderId: currentClerkId },
-        { receiverId: currentClerkId },
-      ],
+      OR: [{ senderId: currentClerkId }, { receiverId: currentClerkId }],
     },
     _max: {
       createdAt: true,
@@ -710,11 +745,10 @@ export const getAllOtherUsersSorted = async () => {
     },
   });
 
-  
   const conversations = grouped.map((group) => {
     const partnerId =
-    group.senderId === currentClerkId ? group.receiverId : group.senderId;
-    
+      group.senderId === currentClerkId ? group.receiverId : group.senderId;
+
     return {
       partnerId,
       lastMessageTime: group._max.createdAt,
@@ -729,7 +763,6 @@ export const getAllOtherUsersSorted = async () => {
     };
   });
 
-
   combined.sort((a, b) => {
     const timeA = a.lastMessageTime ? a.lastMessageTime.getTime() : 0;
     const timeB = b.lastMessageTime ? b.lastMessageTime.getTime() : 0;
@@ -739,13 +772,12 @@ export const getAllOtherUsersSorted = async () => {
   return combined;
 };
 
-
 export const postMessage = async (formData: FormData): Promise<void> => {
   const data = Object.fromEntries(formData);
   const validatedData = zodValidate(messageSchema, data);
   const { content, receiverId, senderId } = validatedData;
-  const receiver = await getUserDetailsByClerkId(receiverId)
-  if(!receiver) redirect("/chat")
+  const receiver = await getUserDetailsByClerkId(receiverId);
+  if (!receiver) redirect("/chat");
   await db.message.create({
     data: {
       senderId: senderId,
@@ -753,23 +785,23 @@ export const postMessage = async (formData: FormData): Promise<void> => {
       content: content,
     },
   });
-  revalidatePath(`/chat/${receiver.username}`)
+  revalidatePath(`/chat/${receiver.username}`);
 };
 
-  export const getMessages = async(receiverUsername:string) => {
-    const user = await getUser()
-    const receiver = await getUserDetails(receiverUsername)
-    if(!receiver) redirect("/chat")
-    const messages = await db.message.findMany({
-      where:{
-        OR: [
-          {senderId:user.id, receiverId:receiver.clerkId},
-          {senderId:receiver.clerkId, receiverId: user.id}
-        ]
-      },
-      orderBy:{
-        createdAt:"asc"
-      }
-    })
-    return messages;
-  }
+export const getMessages = async (receiverUsername: string) => {
+  const user = await getUser();
+  const receiver = await getUserDetails(receiverUsername);
+  if (!receiver) redirect("/chat");
+  const messages = await db.message.findMany({
+    where: {
+      OR: [
+        { senderId: user.id, receiverId: receiver.clerkId },
+        { senderId: receiver.clerkId, receiverId: user.id },
+      ],
+    },
+    orderBy: {
+      createdAt: "asc",
+    },
+  });
+  return messages;
+};
