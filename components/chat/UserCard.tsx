@@ -2,12 +2,26 @@ import { UserCardType } from "@/utils/types";
 import Image from "next/image";
 import { Card } from "../ui/card";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
-function UserCard({ user }: { user: UserCardType }) {
+function UserCard({
+  user,
+  isActive,
+}: {
+  user: UserCardType;
+  isActive: boolean;
+}) {
   const { id, firstName, lastName, username, profileImg } = user;
+  if(!profileImg || !username) redirect("/")
   return (
     <Link href={`/chat/${username}`}>
-      <Card className="cursor-pointer hover:bg-muted transition-colors duration-200">
+      <Card
+        className={`cursor-pointer transition-colors duration-200 ${
+          isActive
+            ? "bg-primary text-white"
+            : "hover:bg-muted"
+        }`}
+      >
         <div className="flex items-center p-2">
           <Image
             src={profileImg}

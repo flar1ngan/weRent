@@ -12,11 +12,12 @@ export type ItemCardType = {
 };
 
 export type UserCardType = {
-  id: string,
-  firstName: string,
-  lastName:string,
-  username:string
-  profileImg:string,
+  id?: string,
+  firstName?: string,
+  lastName?:string,
+  username?:string
+  profileImg?:string,
+  lastMessageTime?: Date | null;
 }
 
 export type DateRangeType = {

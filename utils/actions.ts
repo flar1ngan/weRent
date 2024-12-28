@@ -581,6 +581,7 @@ export const getReservationList = async () => {
         select: {
           firstName: true,
           lastName: true,
+          username: true,
         },
       },
     },
@@ -674,6 +675,61 @@ export const getAllOtherUsers = async () => {
     },
   });
 };
+
+
+export const getAllOtherUsersSorted = async () => {
+  const currentUser = await getUser();
+  const currentClerkId = currentUser.id;
+
+  const allOtherUsers = await getAllOtherUsers()
+  
+  const grouped = await db.message.groupBy({
+    by: ["senderId", "receiverId"],
+    where: {
+      OR: [
+        { senderId: currentClerkId },
+        { receiverId: currentClerkId },
+      ],
+    },
+    _max: {
+      createdAt: true,
+    },
+    orderBy: {
+      _max: {
+        createdAt: "desc",
+      },
+    },
+  });
+
+  
+  const conversations = grouped.map((group) => {
+    const partnerId =
+    group.senderId === currentClerkId ? group.receiverId : group.senderId;
+    
+    return {
+      partnerId,
+      lastMessageTime: group._max.createdAt,
+    };
+  });
+
+  const combined = allOtherUsers.map((user) => {
+    const convo = conversations.find((c) => c.partnerId === user.clerkId);
+    return {
+      ...user,
+      lastMessageTime: convo ? convo.lastMessageTime : null,
+    };
+  });
+
+
+  combined.sort((a, b) => {
+    const timeA = a.lastMessageTime ? a.lastMessageTime.getTime() : 0;
+    const timeB = b.lastMessageTime ? b.lastMessageTime.getTime() : 0;
+    return timeB - timeA;
+  });
+
+  return combined;
+};
+
 
 export const postMessage = async (formData: FormData): Promise<void> => {
   const data = Object.fromEntries(formData);

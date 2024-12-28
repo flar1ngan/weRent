@@ -1,7 +1,7 @@
 import { getMessages, getUserDetailsByClerkId } from "@/utils/actions";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import ChatMessages from "./ChatMessages"; // Import the client component
+import ChatMessages from "./ChatMessages";
 
 async function ChatContainer({
   receiverUsername,
@@ -15,7 +15,7 @@ async function ChatContainer({
   if (user?.username === receiverUsername) redirect("/chat");
 
   return (
-    <div className="flex-1 p-4 overflow-y-auto border-t">
+    <div className="flex-1 overflow-y-auto border-t border-r">
       <ChatMessages messages={messages} userId={userId} />
     </div>
   );

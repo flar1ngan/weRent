@@ -25,7 +25,7 @@ async function ProfilePage({ params }: { params: { id: string } }) {
           <p className="text-3xl font-semibold">
             {profile.firstName + " " + profile.lastName}
           </p>
-          <p className="mb-8">@{profile.username}</p>
+          <p className="mb-4">@{profile.username}</p>
           {userId === profile.clerkId && (
             <Link href="/profile/update">
               <Button variant="default" size="lg">
@@ -33,12 +33,23 @@ async function ProfilePage({ params }: { params: { id: string } }) {
               </Button>
             </Link>
           )}
+          {userId !== profile.clerkId && (
+            <Link href={`/chat/${profile.username}`}>
+              <Button variant="default" size="lg">
+                Sazināties
+              </Button>
+            </Link>
+          )}
         </div>
       </div>
-      <h1 className="capitalize text-2xl font-semibold mb-8 mt-16">
-        Lietotāja sludinājumi:
-      </h1>
-      <ItemsList items={items} />
+      {items.length > 0 ? (
+        <>
+          <h1 className="capitalize text-2xl font-semibold mb-8 mt-16">
+            Lietotāja sludinājumi:
+          </h1>
+          <ItemsList items={items} />
+        </>
+      ) : null}
     </section>
   );
 }

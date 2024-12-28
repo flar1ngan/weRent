@@ -89,7 +89,7 @@ async function RentPage() {
               endDate: lastDay,
             } = reservation;
             const { id: itemId, name } = reservation.item;
-            const { firstName, lastName } = reservation.profile;
+            const { firstName, lastName, username } = reservation.profile;
             const startDate = formatDate(firstDay);
             const endDate = formatDate(lastDay);
             return (
@@ -106,7 +106,13 @@ async function RentPage() {
                 <TableCell>{formatCurrency(totalPrice)}</TableCell>
                 <TableCell>{startDate}</TableCell>
                 <TableCell>{endDate}</TableCell>
-                <TableCell>{firstName + " " + lastName}</TableCell>
+                <TableCell>
+                  <Link href={`/profile/${username}`}>
+                  <p className="underline">
+                    {firstName + " " + lastName}
+                    </p>
+                  </Link>
+                  </TableCell>
               </TableRow>
             );
           })}
