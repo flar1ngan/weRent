@@ -424,6 +424,13 @@ export const getReservations = async () => {
           name: true,
         },
       },
+      profile: {
+        select: {
+          firstName: true,
+          lastName: true,
+          username: true,
+        },
+      },
     },
     orderBy: {
       createdAt: "desc",

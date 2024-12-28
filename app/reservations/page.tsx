@@ -29,7 +29,7 @@ async function ReservationsPage() {
             <TableHead>Cena</TableHead>
             <TableHead>No</TableHead>
             <TableHead>Līdz</TableHead>
-            <TableHead>Līdz</TableHead>
+            <TableHead>Autors</TableHead>
             <TableHead>Darbības</TableHead>
           </TableRow>
         </TableHeader>
@@ -45,6 +45,7 @@ async function ReservationsPage() {
             const { id: itemId, name } = reservation.item;
             const startDate = formatDate(firstDay);
             const endDate = formatDate(lastDay);
+            const { firstName, lastName, username } = reservation.profile;
             return (
               <TableRow key={id}>
                 <TableCell>
@@ -59,8 +60,14 @@ async function ReservationsPage() {
                 <TableCell>{formatCurrency(totalPrice)}</TableCell>
                 <TableCell>{startDate}</TableCell>
                 <TableCell>{endDate}</TableCell>
-                <TableCell>{endDate}</TableCell>
-                <TableCell><DeleteReservation rentId={id}/></TableCell>
+                <TableCell>
+                  <Link href={`/profile/${username}`}>
+                    <p className="underline">{firstName + " " + lastName}</p>
+                  </Link>
+                </TableCell>
+                <TableCell>
+                  <DeleteReservation rentId={id} />
+                </TableCell>
               </TableRow>
             );
           })}
@@ -70,12 +77,13 @@ async function ReservationsPage() {
   );
 }
 
-function DeleteReservation({rentId}:{rentId:string}){
-  const deleteReservationAction = deleteReservation.bind(null,{rentId})
-  return <FormContainer action={deleteReservationAction}>
-    <IconButton actionType="delete" />
+function DeleteReservation({ rentId }: { rentId: string }) {
+  const deleteReservationAction = deleteReservation.bind(null, { rentId });
+  return (
+    <FormContainer action={deleteReservationAction}>
+      <IconButton actionType="delete" />
     </FormContainer>
-
+  );
 }
 
 export default ReservationsPage;

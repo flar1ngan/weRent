@@ -20,8 +20,7 @@ function LinksDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="default" className='h-10 w-10'>
-          {/* <LuAlignLeft className="w-6 h-6" /> */}
+        <Button variant="default" className='h-10 w-10 p-0'>
           <UserIcon />
         </Button>
       </DropdownMenuTrigger>
