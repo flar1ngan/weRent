@@ -17,7 +17,7 @@ function FormCitiesInput({ defaultValue }: { defaultValue?: string }) {
         Pilsēta
       </Label>
       <Select
-        defaultValue={defaultValue || cities[0].label}
+        defaultValue={defaultValue || ""}
         name={name}
         required
       >

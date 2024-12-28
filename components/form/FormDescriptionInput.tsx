@@ -29,6 +29,6 @@ function FormDescriptionInput({
 }
 
 const description =
-  "Very nice description, very nice item, rent it, you won't regret 100%";
+  "";
 
 export default FormDescriptionInput;

@@ -17,7 +17,7 @@ function FormCategoriesInput({ defaultValue }: { defaultValue?: string }) {
         Kategorija
       </Label>
       <Select
-        defaultValue={defaultValue || categories[0].label}
+        defaultValue={defaultValue || ""}
         name={name}
         required
       >

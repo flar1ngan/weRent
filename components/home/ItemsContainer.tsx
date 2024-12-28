@@ -13,18 +13,18 @@ async function ItemsContainer({
   page?: string;
 }) {
   const currentPage = page ? parseInt(page, 10) : 1;
-  const PAGE_SIZE = 6;
+  const pageSize = 8;
   const { items, totalCount } = await getItems({
     category,
     search,
     page: currentPage,
-    pageSize: PAGE_SIZE,
+    pageSize: pageSize,
   });
   if (items.length === 0) {
     return <EmptyList />;
   }
 
-  const totalPages = Math.ceil(totalCount / PAGE_SIZE);
+  const totalPages = Math.ceil(totalCount / pageSize);
 
   return (
     <>

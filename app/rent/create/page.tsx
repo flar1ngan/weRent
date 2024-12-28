@@ -22,7 +22,6 @@ function CreateItem() {
               name="name"
               type="text"
               label="Nosaukums"
-              defaultValue="Nikon camera"
             />
             <FormPriceInput />
             <FormCategoriesInput />

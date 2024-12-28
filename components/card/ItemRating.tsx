@@ -9,10 +9,10 @@ async function ItemRating({ itemId, inPage }: { itemId: string; inPage: boolean 
   const countText = count > 1 ? "atsauksmes" : "atsauksme";
   const countValue = `(${count}) ${inPage ? countText : ""}`;
 
-  return <span className={className}>
+  return <div className={className}>
     <FaStar className="w-3 h-3"/>
     {rating} {countValue}
-  </span>;
+  </div>;
 }
 
 export default ItemRating;

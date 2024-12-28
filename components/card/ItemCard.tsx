@@ -21,8 +21,8 @@ function ItemCard({ item }: { item: ItemCardType }) {
             className="rounded-md object-cover transform group-hover:scale-110 transition-transform duration-500"
           />
         </div>
-        <div className="h-10 flex justify-between">
-          <h3 className="text-sm font-semibold mt-1">
+        <div className="h-10 flex justify-between items-start">
+          <h3 className="text-sm font-semibold w-[75%] break-words">
             {name.substring(0, 40)}
           </h3>
           <ItemRating inPage={false} itemId={itemId} />
