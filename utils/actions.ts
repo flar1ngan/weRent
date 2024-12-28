@@ -467,7 +467,7 @@ export const deleteItem = async (prevState: { itemId: string }) => {
         id: itemId,
       },
     });
-    revalidatePath("/items");
+    revalidatePath("/rent");
     return { message: "Sludinājums ir veiksmīgi izdzēsts" };
   } catch (error) {
     return { message: error instanceof Error ? error.message : "kļūda" };
