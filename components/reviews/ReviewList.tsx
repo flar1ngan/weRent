@@ -12,13 +12,15 @@ async function ReviewList({ itemId }: { itemId: string }) {
       <div className="grid md:grid-cols-1 gap-8 mt-4">
         {reviews.map((review) => {
           const { comment, rating, id } = review;
-          const { firstName, profileImg } = review.profile;
+          const { firstName, lastName, username, profileImg } = review.profile;
           const reviewDetails = {
             id,
             rating,
             comment,
             profileImg,
             firstName,
+            lastName,
+            username
           };
           return <ReviewCard key={review.id} reviewDetails={reviewDetails} />
         })}

@@ -298,6 +298,8 @@ export const getItemReviews = async (itemId: string) => {
       profile: {
         select: {
           firstName: true,
+          lastName: true,
+          username: true,
           profileImg: true,
         },
       },
