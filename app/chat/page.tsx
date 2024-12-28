@@ -1,9 +1,4 @@
-import ChatContainer from "@/components/chat/ChatContainer";
-import ChatInput from "@/components/chat/ChatInput";
 import UsersContainer from "@/components/chat/UsersContainer";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 
 async function ChatPage() {
   return (

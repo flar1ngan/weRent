@@ -1,7 +1,5 @@
-import { getAllOtherUsers, getAllOtherUsersSorted } from "@/utils/actions";
+import { getAllOtherUsersSorted } from "@/utils/actions";
 import UsersList from "./UsersList";
-import { UserCardType } from "@/utils/types";
-import { Card } from "../ui/card";
 import { ScrollArea } from "../ui/scroll-area";
 
 async function UsersContainer({receiverUsername}: {receiverUsername: string}) {

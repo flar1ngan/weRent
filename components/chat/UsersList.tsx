@@ -6,8 +6,8 @@ function UsersList({ users, receiverUsername }: { users: UserCardType[], receive
     <div className="space-y-2">
       {users.map((user) => {
         return (
-          <div>
-            <UserCard key={user.id} user={user} isActive={user.username === receiverUsername} />
+          <div key={user.id}>
+            <UserCard user={user} isActive={user.username === receiverUsername} />
           </div>
         );
       })}

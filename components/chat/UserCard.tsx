@@ -11,7 +11,7 @@ function UserCard({
   user: UserCardType;
   isActive: boolean;
 }) {
-  const { id, firstName, lastName, username, profileImg } = user;
+  const { firstName, lastName, username, profileImg } = user;
   if(!profileImg || !username) redirect("/")
   return (
     <Link href={`/chat/${username}`}>
