@@ -16,7 +16,7 @@ function Description({ description }: { description: string }) {
   return (
     <article className="mt-4">
       <SectionName text="Apraksts" />
-      <p className="font-light leading-loose text-muted-foreground">
+      <p className="font-light leading-6 text-muted-foreground">
         {activeDescription}
       </p>
       {isLong && (

@@ -4,7 +4,7 @@ import { useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { SignInButton } from "@clerk/nextjs";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
-import { LuTrash2, LuPenSquare } from "react-icons/lu";
+import { LuTrash2, LuPenSquare, LuSendHorizonal } from "react-icons/lu";
 import { redirect } from "next/navigation";
 
 type ButtonSize = "default" | "sm" | "lg";
@@ -17,7 +17,7 @@ type SubmitButtonProps = {
 
 export function SubmitButton({
   className = "",
-  text = "iesniegt",
+  text = "Iesniegt",
   size = "lg",
 }: SubmitButtonProps) {
   const { pending } = useFormStatus();
@@ -26,7 +26,7 @@ export function SubmitButton({
     <Button
       type="submit"
       disabled={pending}
-      className={`capitalize ${className}`}
+      className={` ${className}`}
       size={size}
     >
       {pending ? (
@@ -36,6 +36,29 @@ export function SubmitButton({
         </>
       ) : (
         text
+      )}
+    </Button>
+  );
+}
+
+export function MessageSubmitButton({
+  className = "",
+  text = "iesniegt",
+  size = "default",
+}: SubmitButtonProps) {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button
+      type="submit"
+      disabled={pending}
+      className={` ${className}`}
+      size={size}
+    >
+      {pending ? (
+          <ReloadIcon className="animate-spin" />
+      ) : (
+        <LuSendHorizonal />
       )}
     </Button>
   );

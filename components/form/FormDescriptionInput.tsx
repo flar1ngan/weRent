@@ -23,6 +23,7 @@ function FormDescriptionInput({
         defaultValue={defaultValue || description}
         rows={3}
         required
+        className="max-h-44 mt-1"
       />
     </div>
   );

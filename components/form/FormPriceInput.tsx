@@ -12,7 +12,7 @@ function FormPriceInput({defaultValue}:PriceInputProps) {
         <Label htmlFor={name}>
             Cena (€/dienā)
         </Label>
-        <Input id={name} type='number' name={name} min={0} defaultValue={defaultValue || ""} required/>
+        <Input id={name} type='number' name={name} min={0} defaultValue={defaultValue || ""} required className='mt-1'/>
     </div>
   )
 }

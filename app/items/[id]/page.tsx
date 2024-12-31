@@ -4,7 +4,11 @@ import Breadcrumbs from "@/components/items/Breadcrumbs";
 import ImageContainer from "@/components/items/ImageContainer";
 import UserInfo from "@/components/items/UserInfo";
 import { Separator } from "@/components/ui/separator";
-import { getItemDetails, checkExistingReview } from "@/utils/actions";
+import {
+  getItemDetails,
+  checkExistingReview,
+  getProfile,
+} from "@/utils/actions";
 import Description from "@/components/items/Description";
 import { redirect } from "next/navigation";
 import SubmitReview from "@/components/reviews/SubmitReview";
@@ -12,6 +16,8 @@ import ReviewList from "@/components/reviews/ReviewList";
 import { auth } from "@clerk/nextjs/server";
 import dynamic from "next/dynamic";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const DynamicRentWrapper = dynamic(
   () => import("@/components/rent/RentWrapper"),
@@ -26,9 +32,12 @@ async function ItemPage({ params }: { params: { id: string } }) {
   if (!item) redirect("/");
   const firstName = item.profile.firstName;
   const profileImg = item.profile.profileImg;
-  const username = item.profile.username
+  const username = item.profile.username;
+  const lastName = item.profile.lastName;
 
   const { userId } = auth();
+  const user = await getProfile();
+  console.log(user.username);
   const isNotOwner = item.profile.clerkId !== userId;
   const reviewMissing =
     userId && isNotOwner && !(await checkExistingReview(userId, item.id));
@@ -36,31 +45,39 @@ async function ItemPage({ params }: { params: { id: string } }) {
   return (
     <section>
       <Breadcrumbs name={item.name} />
-      <header className="flex justify-between items-center mt-4">
-        <h1 className="text-4xl font-bold capitalize">{item.name}</h1>
-        <FavoriteButton itemId={item.id} />
-      </header>
-      <ImageContainer image={item.image} name={item.name} />
-      <section className="lg:grid lg:grid-cols-12 gap-x-12 mt-12">
-        <div className="lg:col-span-8">
-          <div className="flex gap-x-4 items-center">
-            <h1 className="text-xl font-bold">{item.name}</h1>
+      <div className="grid lg:grid-cols-2 gap-x-10">
+        <ImageContainer image={item.image} name={item.name} />
+        <div className="gap-x-12 mt-6">
+          <div>
+            <h1 className="text-2xl font-bold mb-1">{item.name}</h1>
             <ItemRating inPage itemId={item.id} />
+            <p className="font-semibold mt-4 mb-2">Publicētājs</p>
+            <div className="grid grid-cols-2 gap-x-12 items-center">
+              <UserInfo
+                profile={{ username, firstName, profileImg, lastName }}
+              />
+              {user.username !== username && (
+                <Link href={`/chat/${username}`}>
+                  <Button variant="default" size="lg" className="w-full">
+                    Sazināties
+                  </Button>
+                </Link>
+              )}
+            </div>
+            <Separator className="mt-4" />
+            <Description description={item.description} />
           </div>
-          <UserInfo profile={{ username, firstName, profileImg }} />
-          <Separator className="mt-4" />
-          <Description description={item.description} />
+          <div className="grid sm:grid-cols-2 items-center">
+            <DynamicRentWrapper
+              itemId={item.id}
+              price={item.price}
+              rents={item.rents}
+            />
+          </div>
         </div>
-        <div className="lg:col-span-4 flex flex-col items-center">
-          <DynamicRentWrapper
-            itemId={item.id}
-            price={item.price}
-            rents={item.rents}
-          />
-        </div>
-      </section>
-      {reviewMissing && <SubmitReview itemId={item.id} />}
-      <ReviewList itemId={item.id} />
+      </div>
+      <Separator className="mt-6"/>  
+      <ReviewList itemId={item.id} reviewMissing={reviewMissing} />
     </section>
   );
 }

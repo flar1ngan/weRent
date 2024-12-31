@@ -5,7 +5,7 @@ import ItemsList from "@/components/home/ItemsList";
 async function FavoritesPage() {
   const favorites = await getFavorites();
   if (favorites.length === 0) {
-    return <EmptyList />;
+    return <EmptyList message="Jums nav favorītu" />;
   }
 
   return <ItemsList items={favorites} />;

@@ -10,8 +10,8 @@ const EmptyList = ({
   message?: string;
   btnText?: string;
 }) => {
-  return <div className="mt-4">
-    <h2 className="text-xl font-bold">{heading}</h2>
+  return <div className="mt-4 text-center">
+    <h2 className="text-xl font-bold items-center">{heading}</h2>
     <p className="text-lg">{message}</p>
     <Button asChild className="mt-2 capitalize" size="lg">
         <Link href="/">{btnText}</Link>

@@ -1,18 +1,27 @@
-import { getAllOtherUsersSorted } from "@/utils/actions";
+import { getUsersSorted } from "@/utils/actions";
 import UsersList from "./UsersList";
-import { ScrollArea } from "../ui/scroll-area";
+import { ScrollArea, ScrollBar } from "../ui/scroll-area";
+import Link from "next/link";
+import { Button } from "../ui/button";
 
-async function UsersContainer({receiverUsername}: {receiverUsername: string}) {
-  const users = await getAllOtherUsersSorted();
+async function UsersContainer({
+  receiverUsername,
+}: {
+  receiverUsername: string;
+}) {
+  const users = await getUsersSorted();
   return (
-    <>
-      <div className="h-16 p-4 font-semibold border-b flex items-center">Lietotāji</div>
-      <ScrollArea className="h-[calc(80vh-4rem)]">
+    <div className="flex flex-col h-full">
+      <div className="h-16 p-4 font-semibold border-b flex items-center text-center text-lg justify-center">
+        Čatu saraksts
+      </div>
+      <ScrollArea className="flex-1">
         <div className="p-2">
           <UsersList users={users} receiverUsername={receiverUsername} />
         </div>
+        <ScrollBar />
       </ScrollArea>
-    </>
+    </div>
   );
 }
 

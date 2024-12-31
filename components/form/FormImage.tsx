@@ -14,7 +14,7 @@ function FormImage() {
         type="file"
         required
         accept="image/*"
-        className="max-w-xs"
+        className="max-w-xs mt-1"
       />
     </div>
   );

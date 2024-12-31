@@ -3,32 +3,42 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import ItemsList from "@/components/home/ItemsList";
+import { SheetEdit } from "@/components/profile/SheetEdit";
+import { Card } from "@/components/ui/card";
 
 async function Profile() {
   const profile = await getProfile();
-  const items = await getAllUserItems(profile.id)
+  const items = await getAllUserItems(profile.username);
+  console.log(profile.id);
   return (
     <section>
-      <div className="flex gap-x-6">
-        <Image
-          src={profile.profileImg}
-          alt="Profila attēls"
-          width={256}
-          height={256}
-          className="object-cover rounded mb-2"
-        />
-        <div>
-          <p className="text-3xl font-semibold">{profile.firstName + " " + profile.lastName}</p>
-          <p className="mb-8">@{profile.username}</p>
-          <Link href="/profile/update">
-            <Button variant="default" size="lg">
-              Rediģēt profilu
-            </Button>
-          </Link>
+      <Card className="mt-4 max-w-2xl mx-auto p-6 shadow-md">
+        <div className="flex flex-col md:flex-row items-center gap-6">
+          <Image
+            src={profile.profileImg}
+            alt="Profila attēls"
+            width={128}
+            height={128}
+            className="object-cover rounded-full border shadow"
+          />
+          <div>
+            <p className="text-2xl font-bold">
+              {profile.firstName} {profile.lastName}
+            </p>
+            <p className="mb-4 font-light">@{profile.username}</p>
+
+            <SheetEdit />
+          </div>
         </div>
-      </div>
-      <h1 className="capitalize text-2xl font-semibold mb-8 mt-16">Lietotāja sludinājumi:</h1>
-      <ItemsList items={items}/>
+      </Card>
+      {items.length > 0 ? (
+        <>
+          <h1 className="text-2xl font-semibold mb-8 mt-12 text-center">
+            Lietotāja sludinājumi ({items.length})
+          </h1>
+          <ItemsList items={items} />
+        </>
+      ) : null}
     </section>
   );
 }

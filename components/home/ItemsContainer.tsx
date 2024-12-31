@@ -21,7 +21,11 @@ async function ItemsContainer({
     pageSize: pageSize,
   });
   if (items.length === 0) {
-    return <EmptyList />;
+    return ( 
+      <div className="flex justify-center">
+    <EmptyList />
+      </div>
+  );
   }
 
   const totalPages = Math.ceil(totalCount / pageSize);

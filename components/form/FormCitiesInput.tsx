@@ -16,6 +16,7 @@ function FormCitiesInput({ defaultValue }: { defaultValue?: string }) {
       <Label htmlFor={name} className="capitalize">
         Pilsēta
       </Label>
+      <div className="mt-1">
       <Select
         defaultValue={defaultValue || ""}
         name={name}
@@ -34,6 +35,7 @@ function FormCitiesInput({ defaultValue }: { defaultValue?: string }) {
             })}
           </SelectContent>
       </Select>
+      </div>
     </div>
   );
 }

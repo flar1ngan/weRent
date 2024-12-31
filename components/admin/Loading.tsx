@@ -1,19 +1,11 @@
-import { Card, CardHeader } from "../ui/card"
-import { Skeleton } from "../ui/skeleton"
+import { Skeleton } from "../ui/skeleton";
 
-
-export function StatsLoadingContainer (){
-    return <div className="mt-8 grid md:grid-cols-2 gap-4 lg: grid-cols-3">
-        <LoadingCard/>
-        <LoadingCard/>
-        <LoadingCard/>
+export function StatsLoadingContainer() {
+  return (
+    <div className="mt-8 grid md:grid-cols-3 gap-3 lg: grid-cols-3">
+      <Skeleton className="w-full h-20 rounded" />
+      <Skeleton className="w-full h-20 rounded" />
+      <Skeleton className="w-full h-20 rounded" />
     </div>
-}
-
-function LoadingCard (){
-    return <Card>
-        <CardHeader>
-            <Skeleton className="w-full h-20 rounded" />
-        </CardHeader>
-    </Card>
+  );
 }

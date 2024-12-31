@@ -463,13 +463,13 @@ export const getReservations = async () => {
         select: {
           id: true,
           name: true,
-        },
-      },
-      profile: {
-        select: {
-          firstName: true,
-          lastName: true,
-          username: true,
+          profile: {
+            select: {
+              firstName: true,
+              lastName: true,
+              username: true,
+            },
+          },
         },
       },
     },
@@ -524,6 +524,9 @@ export const getUserItems = async () => {
       name: true,
       price: true,
     },
+    orderBy:{
+      createdAt:"desc"
+    }
   });
   const itemsWithReservations = await Promise.all(
     items.map(async (item) => {
@@ -533,7 +536,7 @@ export const getUserItems = async () => {
         },
         _sum: {
           totalPrice: true,
-        },
+        }
       });
       return {
         ...item,
@@ -661,6 +664,7 @@ export const getAllItems = async () => {
         select: {
           firstName: true,
           lastName: true,
+          username: true,
         },
       },
     },
@@ -772,6 +776,61 @@ export const getAllOtherUsersSorted = async () => {
   return combined;
 };
 
+export const getUsersSorted = async () => {
+  const currentUser = await getUser();
+  const currentClerkId = currentUser.id;
+
+  const conversations = await db.message.groupBy({
+    by: ["senderId", "receiverId"],
+    where: {
+      OR: [
+        { senderId: currentClerkId },
+        { receiverId: currentClerkId },
+      ],
+    },
+    _max: {
+      createdAt: true,
+    },
+    orderBy: {
+      _max: {
+        createdAt: "desc",
+      },
+    },
+  });
+
+  const partnersWithLastMessage = conversations.map((group) => {
+    const partnerId =
+      group.senderId === currentClerkId ? group.receiverId : group.senderId;
+
+    return {
+      partnerId,
+      lastMessageTime: group._max.createdAt,
+    };
+  });
+
+  const partnerProfiles = await db.profile.findMany({
+    where: {
+      clerkId: { in: partnersWithLastMessage.map((c) => c.partnerId) },
+    },
+  });
+
+  const results = partnerProfiles.map((profile) => {
+    const convo = partnersWithLastMessage.find((c) => c.partnerId === profile.clerkId);
+    return {
+      ...profile,
+      lastMessageTime: convo ? convo.lastMessageTime : null,
+    };
+  });
+
+  results.sort((a, b) => {
+    const timeA = a.lastMessageTime ? a.lastMessageTime.getTime() : 0;
+    const timeB = b.lastMessageTime ? b.lastMessageTime.getTime() : 0;
+    return timeB - timeA;
+  });
+
+  return results;
+};
+
 export const postMessage = async (formData: FormData): Promise<void> => {
   const data = Object.fromEntries(formData);
   const validatedData = zodValidate(messageSchema, data);
@@ -805,3 +864,25 @@ export const getMessages = async (receiverUsername: string) => {
   });
   return messages;
 };
+
+export const getLastMessage = async (userId1:string, userId2:string) => {
+  const lastMessage = await db.message.findFirst({
+    where: {
+      OR: [
+        {
+          senderId: userId1,
+          receiverId: userId2,
+        },
+        {
+          senderId: userId2,
+          receiverId: userId1,
+        },
+      ],
+    },
+    orderBy: {
+      createdAt: "desc"
+    },
+  });
+
+  return lastMessage?.content;
+}

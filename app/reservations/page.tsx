@@ -16,10 +16,10 @@ import {
 
 async function ReservationsPage() {
   const reservations = await getReservations();
-  if (reservations.length === 0) return <EmptyList />;
+  if (reservations.length === 0) return <EmptyList message="Jums pašlaik nav rezervāciju" />;
   return (
-    <div className="mt-16">
-      <h4 className="mb-4">Rezervācijas : {reservations.length}</h4>
+    <div>
+      <h4 className="mb-4 font-semibold text-2xl">Jūsu rezervācijas ({reservations.length})</h4>
       <Table>
         <TableCaption>Jūsu rezervācijas saraksts</TableCaption>
         <TableHeader>
@@ -45,7 +45,7 @@ async function ReservationsPage() {
             const { id: itemId, name } = reservation.item;
             const startDate = formatDate(firstDay);
             const endDate = formatDate(lastDay);
-            const { firstName, lastName, username } = reservation.profile;
+            const {username, firstName, lastName} = reservation.item.profile
             return (
               <TableRow key={id}>
                 <TableCell>

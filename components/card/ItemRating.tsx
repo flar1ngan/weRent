@@ -5,7 +5,7 @@ async function ItemRating({ itemId, inPage }: { itemId: string; inPage: boolean 
   const {rating, count} = await getItemRating(itemId)
   if(count===0) return null;
 
-  const className = `flex gap-1 items-center ${inPage ? "text-md" : "text-xs"}`;
+  const className = `flex gap-1 items-center ${inPage ? "text-md" : "text-xs text-primary"}`;
   const countText = count > 1 ? "atsauksmes" : "atsauksme";
   const countValue = `(${count}) ${inPage ? countText : ""}`;
 

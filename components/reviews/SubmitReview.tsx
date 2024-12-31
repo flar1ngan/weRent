@@ -8,24 +8,49 @@ import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import { createReview } from "@/utils/actions";
 
-function SubmitReview({itemId}:{itemId:string}) {
-  const [isFormVisible, setIsFormVisible] = useState(false)
+function SubmitReview({ itemId }: { itemId: string }) {
+  const [isFormVisible, setIsFormVisible] = useState(false);
+  const [isAnimating, setAnimating] = useState(false);
 
-  return <div className="mt-8">
-    <Button onClick={()=>setIsFormVisible((prev)=>!prev)}>
-      Atstāt atsauksmi
-    </Button>
-    {
-      isFormVisible && <Card className="mt-8 p-8">
-        <FormContainer action={createReview}>
-          <input type="hidden" name="itemId" value={itemId} />
-          <RatingInput name="rating" labelText="Reitings" />
-          <FormDescriptionInput name="comment" labelText="Jūsu pieredze ar šo priekšmetu" defaultValue="Amazing!!"/>
-          <SubmitButton text="Submit" className="mt-4" />
-        </FormContainer>
-      </Card>
+  const handleToggle = () => {
+    if (isFormVisible) {
+      setAnimating(true);
+      setTimeout(() => {
+        setIsFormVisible(false);
+        setAnimating(false);
+      }, 300);
+    } else {
+      setIsFormVisible(true);
     }
-  </div>
+  };
+
+  return (
+    <div className="mt-4">
+      <div>
+        <Button onClick={handleToggle}>
+          {isFormVisible ? <p>Aizvērt</p> : <p>Atstāt atsauksmi</p>}
+        </Button>
+      </div>
+      {(isFormVisible || isAnimating) && (
+        <Card
+          className={`mt-6 p-8 ${
+            isAnimating ? "animate-pop-out" : "animate-slide-in-up"
+          }`}
+        >
+          <FormContainer action={createReview}>
+            <input type="hidden" name="itemId" value={itemId} />
+            <RatingInput name="rating" labelText="Reitings" />
+            <FormDescriptionInput
+              name="comment"
+              labelText="Jūsu pieredze ar šo priekšmetu"
+              defaultValue=""
+            />
+            <SubmitButton text="Iesniegt" className="mt-4" />
+          </FormContainer>
+        </Card>
+      )}
+    </div>
+  );
 }
 
-export default SubmitReview
+export default SubmitReview;

@@ -10,7 +10,7 @@ function SignOut() {
 
   return <SignOutButton redirectUrl="/">
     <button className="w-full text-left" onClick={handleLogout}>
-        Izrakstīties
+        Izrakstīties no konta
     </button>
   </SignOutButton>
 }

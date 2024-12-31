@@ -1,15 +1,17 @@
 type NavLink = {
   href: string;
   label: string;
+  description: string;
 };
 
-export const links: NavLink[] = [
-  { href: "/", label: "sākums" },
-  { href: "/profile ", label: "profils" },
-  { href: "/rent/create", label: "izveidot slūdinājumu" },
-  { href: "/favorites", label: "favorīti" },
-  { href: "/reservations", label: "Rezervācijas" },
-  { href: "/rent", label: "Mani sludinājumi" },
-  { href: "/chat", label: "Chat" },
-  { href: "/admin", label: "Admin" },
+export const rentLinks: NavLink[] = [
+  { href: "/rent/create", label: "Izveidot slūdinājumu", description: "Veido jaunu sludinājumu ātri un vienkārši." },
+  { href: "/favorites", label: "Favorīti", description: "Skati un pārvaldi savus favorītus." },
+  { href: "/reservations", label: "Rezervācijas", description: "Pārvaldi veiktās rezervācijas ērti." },
+  { href: "/rent", label: "Mani sludinājumi", description: "Skati, rediģē un pārvaldi visus savus sludinājumus." },
+];
+
+export const profileLinks: NavLink[] = [
+  { href: "/profile ", label: "Mans profils", description: "Skati un pārvaldi sava profila informāciju." },
+  { href: "/admin", label: "Admin panelis", description: "Piekļūsti administratora iestatījumiem un pārvaldībai." },
 ];

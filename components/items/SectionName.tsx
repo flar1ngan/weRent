@@ -1,6 +1,10 @@
+import { Separator } from "../ui/separator"
+
 function SectionName({text}:{text:string}) {
   return (
-    <h3 className="mb-2 text-lg font-bold">{text}</h3>
+    <>
+    <h3 className="mb-2 text-2xl font-bold">{text}</h3>
+    </>
   )
 }
 

@@ -4,15 +4,17 @@ import ItemRating from "./ItemRating";
 import FavoriteButton from "./FavoriteButton";
 import { ItemCardType } from "@/utils/types";
 import { formatCurrency } from "@/utils/format";
+import { Card } from "../ui/card";
 
 function ItemCard({ item }: { item: ItemCardType }) {
   const { name, image, price } = item;
   const { city, id: itemId } = item;
 
   return (
+    <Card className="p-3">
     <article className="group relative">
       <Link href={`/items/${itemId}`}>
-        <div className="relative h-[300px] mb-2 overflow-hidden rounded-md">
+        <div className="relative h-[250px] mb-2 overflow-hidden rounded-md">
           <Image
             src={image}
             fill
@@ -27,18 +29,19 @@ function ItemCard({ item }: { item: ItemCardType }) {
           </h3>
           <ItemRating inPage={false} itemId={itemId} />
         </div>
-        <div className="flex justify-between items-center mt-1">
-          <p className="text-sm">
+        <div className="flex justify-between items-center mt-2">
+          <p className="text-sm">{city}</p>
+          <p className="text-md">
             <span className="font-semibold">{formatCurrency(price)} </span>
             dienā
           </p>
-          <p className="text-sm">{city}</p>
         </div>
       </Link>
-      <div className="absolute top-5 right-5 z-10">
+      <div className="absolute top-5 right-5">
         <FavoriteButton itemId={itemId} />
       </div>
     </article>
+    </Card>
   );
 }
 

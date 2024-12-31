@@ -7,36 +7,43 @@ import FormCategoriesInput from "@/components/form/FormCategoriesInput";
 import FormDescriptionInput from "@/components/form/FormDescriptionInput";
 import FormCitiesInput from "@/components/form/FormCitiesInput";
 import FormImage from "@/components/form/FormImage";
+import { Card } from "@/components/ui/card";
 
 function CreateItem() {
   return (
     <section>
-      <h1 className="text-2xl font-semibold mb-8">
-        Izveidot slūdinājumu
+      <h1 className="text-2xl font-bold mb-2 mt-4 text-center">
+        Sludinājuma informācija
       </h1>
-      <div className="border p-8 rounded">
-        <h3 className="text-lg mb-4 font-medium">Informācija</h3>
+      <h3 className="text-md mb-4 font-light text-center">
+        Lūdzu, ievadiet sludinājuma informāciju
+      </h3>
+      <Card className="p-8">
         <FormContainer action={createItem}>
           <div className="grid md:grid-cols-2 gap-8 mb-4">
-            <FormInput
-              name="name"
-              type="text"
-              label="Nosaukums"
-            />
+            <FormInput name="name" type="text" label="Nosaukums" />
             <FormPriceInput />
             <FormCategoriesInput />
             <FormCitiesInput />
           </div>
-          <FormDescriptionInput name="description" labelText="Apraksts (līdz 500 vārdiem)"/>
-          <div className="grid md:grid-cols-2 gap-8 mb-4 mt-4">
+          <div className="grid md:grid-cols-3 gap-8 mb-4 mt-4">
+            <div className="col-span-2">
+              <FormDescriptionInput
+                name="description"
+                labelText="Apraksts (līdz 500 vārdiem)"
+              />
+            </div>
             <FormImage />
           </div>
-          <SubmitButton
-            text="Izveidot slūdinājumu"
-            className="capitalize mt-10"
-          />
+          <div className="flex justify-center">
+            <SubmitButton
+              size="lg"
+              text="Izveidot sludinājumu"
+              className="mt-4"
+            />
+          </div>
         </FormContainer>
-      </div>
+      </Card>
     </section>
   );
 }

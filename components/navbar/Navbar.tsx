@@ -1,7 +1,7 @@
 import NavbarSearch from "./NavbarSearch";
-import NavDropdown from "./NavDropdown";
 import DarkMode from "./DarkMode";
 import Logo from "./Logo";
+import { NavItems } from "./NavItems";
 
 function Navbar() {
   return <nav className="border-b">
@@ -10,7 +10,7 @@ function Navbar() {
         <NavbarSearch/>
         <div className="flex gap-4 items-center">
             <DarkMode/>
-            <NavDropdown/>
+            <NavItems/>
         </div>
     </div>
   </nav>

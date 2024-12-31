@@ -13,9 +13,11 @@ type Message = {
 function ChatMessages({
   messages,
   userId,
+  receiverImg,
 }: {
   messages: Message[];
   userId: string;
+  receiverImg?: string;
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -26,9 +28,8 @@ function ChatMessages({
   }, [messages]);
 
   return (
-    <div ref={scrollRef} className="h-full overflow-y-auto">
+    <div ref={scrollRef} className="h-full">
       {messages.map((message, index) => {
-        console.log(`${message.id}-${index}`);
         const messageDate = new Date(message.createdAt);
         const formattedDate = formatDate(messageDate);
 
@@ -37,30 +38,40 @@ function ChatMessages({
           new Date(messages[index - 1].createdAt).toDateString() !==
             messageDate.toDateString();
 
-         return (
+        const isSender = message.senderId === userId;
+
+        return (
           <div key={`${message.id}-${index}`}>
             {isNewDay && (
-              <div className="text-center text-sm text-gray-500 my-4">
+              <div className="text-center text-sm font-light text-muted-foreground my-4">
                 {formattedDate}
               </div>
             )}
 
             <div
-              className={`flex flex-col ${
-                message.senderId === userId ? "items-end mr-2" : "items-start ml-2"
-              }`}
+              className={`flex ${
+                isSender ? "justify-end mr-2" : "justify-start ml-2"
+              } items-end gap-2`}
             >
+              {!isSender && receiverImg && (
+                <img
+                  src={receiverImg}
+                  alt="Receiver Profile"
+                  className="w-10 h-10 rounded-full object-cover"
+                />
+              )}
+
               <div
-                className={`max-w-[75%] text-sm mb-1 shadow rounded-xl px-3 py-2 ${
-                  message.senderId === userId
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-secondary text-secondary-foreground"
+                className={`max-w-[75%] text-sm mb-4 font-medium shadow px-3 py-3 ${
+                  isSender
+                    ? "bg-primary text-primary-foreground rounded-t-xl rounded-bl-xl mr-2"
+                    : "bg-secondary text-secondary-foreground rounded-t-xl rounded-br-xl"
                 }`}
               >
                 {message.content}
-              </div>
-              <div className="text-xs text-gray-500 mt-[1px] mb-1">
-                {formatTime(messageDate)}
+                <div className="text-xs font-light mt-[6px] text-right">
+                  {formatTime(messageDate)}
+                </div>
               </div>
             </div>
           </div>

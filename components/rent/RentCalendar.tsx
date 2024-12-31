@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { DateRange } from "react-day-picker";
 import { useItem } from "@/utils/store";
+import { lv } from "date-fns/locale"
 
 import {
   getBlockedDates,
@@ -46,7 +47,8 @@ function RentCalendar() {
       defaultMonth={currentDate}
       selected={range}
       onSelect={setRange}
-      className="mb-4"
+      locale={lv}
+      className=" flex justify-center md:justify-center lg:justify-start capitalize"
       disabled={blockedPeriods}
     />
   );

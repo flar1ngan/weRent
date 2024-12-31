@@ -14,7 +14,7 @@ function RentForm() {
     <CardTitle className="mb-8">Kopsavilkums</CardTitle>
     <Row label={`€${price} * ${totalDays} dienas`} amount={totalPrice} />
     <Separator className="mt-4" />
-    <CardTitle className="mt-8">
+    <CardTitle className="mt-4">
       <Row label="Kopējā nomas summa" amount={totalPrice} />
     </CardTitle>
   </Card>

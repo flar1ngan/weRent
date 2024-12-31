@@ -12,6 +12,7 @@ export type ItemCardType = {
 };
 
 export type UserCardType = {
+  clerkId?: string,
   id?: string,
   firstName?: string,
   lastName?:string,

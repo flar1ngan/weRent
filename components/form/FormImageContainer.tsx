@@ -18,28 +18,46 @@ type FormImageContainerProps = {
 function FormImageContainer(props: FormImageContainerProps) {
   const { name, text, image, action } = props;
   const [isUpdateForm, setUpdateForm] = useState(false);
+  const [isAnimating, setAnimating] = useState(false);
+
+  const handleToggle = () => {
+    if (isUpdateForm) {
+      setAnimating(true);
+      setTimeout(() => {
+        setUpdateForm(false);
+        setAnimating(false);
+      }, 300);
+    } else {
+      setUpdateForm(true);
+    }
+  };
+
   return (
-    <div>
-      <Image
-        src={image}
-        alt={name}
-        width={100}
-        height={100}
-        className="object-cover rounded w-24 h-24 mb-2"
-      />
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => setUpdateForm((prev) => !prev)}
-      >
-        {text}
-      </Button>
-      {isUpdateForm && (
-        <div className='max-w-lg mt-4'>
+    <div className="flex gap-4">
+      <div className="flex flex-col gap-2 items-center">
+        <Image
+          src={image}
+          alt={name}
+          width={100}
+          height={100}
+          className="object-cover rounded w-24 h-24 mb-2 mr-1"
+        />
+        <Button variant="outline" size="sm" onClick={handleToggle}>
+          {text}
+        </Button>
+      </div>
+      {(isUpdateForm || isAnimating) && (
+        <div
+          className={`max-w-lg mt-4 ${
+            isAnimating ? "animate-pop-out" : "animate-slide-in-up"
+          }`}
+        >
           <FormContainer action={action}>
             {props.children}
             <FormImage />
-            <SubmitButton size='sm' />
+            <div className="flex justify-end mt-2">
+              <SubmitButton size="sm" className="" />
+            </div>
           </FormContainer>
         </div>
       )}

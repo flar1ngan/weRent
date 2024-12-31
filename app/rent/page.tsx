@@ -13,21 +13,21 @@ import {
   TableHead,
   TableRow,
 } from "@/components/ui/table";
+import { SheetEditRent } from "@/components/rent/SheetEditRent";
 
 async function RentPage() {
   const rents = await getUserItems();
   if (rents.length === 0) {
     return (
       <EmptyList
-        heading="Nav sludinājumu"
-        message="Jūs varat izveidot jaunu sludinājumu!"
+        message="Jums pašlaik nav sludinājumu"
       />
     );
   }
   const reservations = await getReservationList();
   return (
-    <div className="mt-16">
-      <h4 className="mb-4">Sludinājumi: {rents.length}</h4>
+    <div>
+      <h4 className="mb-4 font-semibold text-2xl">Jūsu sludinājumi ({rents.length})</h4>
       <Table>
         <TableCaption>Saraksts ar jūsu sludinājumiem</TableCaption>
         <TableHeader>
@@ -54,9 +54,7 @@ async function RentPage() {
                 <TableCell>{formatCurrency(price)}</TableCell>
                 <TableCell>{formatCurrency(totalPriceSum)}</TableCell>
                 <TableCell className="flex items-center gap-x-2">
-                  <Link href={`/rent/${itemId}/edit`}>
-                    <IconButton actionType="edit" />
-                  </Link>
+                  <SheetEditRent itemId={itemId}/>
                   <DeleteItem itemId={itemId} />
                 </TableCell>
               </TableRow>
@@ -64,8 +62,8 @@ async function RentPage() {
           })}
         </TableBody>
       </Table>
-      <h4 className="mb-4 mt-12">
-        Jūsu sludinājumu rezervācijas: {reservations.length}
+      <h4 className="mb-4 mt-12 font-semibold text-2xl">
+        Jūsu sludinājumu rezervācijas ({reservations.length})
       </h4>
       <Table>
         <TableCaption>Saraksts ar jūsu sludinājumu rezervācijām</TableCaption>

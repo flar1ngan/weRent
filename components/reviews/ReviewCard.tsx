@@ -31,7 +31,7 @@ async function ReviewCard({ reviewDetails }: ReviewCardType) {
             />
             <div className="ml-4">
               <h3 className="text-sm font-semibold mb-1">
-                {reviewDetails.firstName}
+                {reviewDetails.firstName + " " + reviewDetails.lastName} 
               </h3>
               <Rating rating={reviewDetails.rating} />
             </div>

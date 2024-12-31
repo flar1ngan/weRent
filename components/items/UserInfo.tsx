@@ -6,28 +6,27 @@ type UserInfoType = {
     username: string;
     profileImg: string;
     firstName: string;
+    lastName: string;
   };
 };
 
 function UserInfo({
-  profile: { username, profileImg, firstName },
+  profile: { username, profileImg, firstName, lastName },
 }: UserInfoType) {
   return (
-    <article className="grid grid-cols-[auto,1fr] gap-4 mt-4">
+    <article className="grid grid-cols-[auto,1fr] gap-2 items-center">
       <Link href={`/profile/${username}`}>
         <Image
           src={profileImg}
           alt={firstName}
           width={48}
           height={48}
-          className="rounded w-12 h-12 object-cover"
+          className="rounded-full w-10 h-10 object-cover"
         />
       </Link>
       <Link href={`/profile/${username}`}>
         <div>
-          <p>
-            Publicētājs: <span className="font-bold">{firstName}</span>
-          </p>
+          <span className="font-bold">{firstName + " " + lastName}</span>
         </div>
       </Link>
     </article>

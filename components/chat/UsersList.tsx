@@ -3,7 +3,7 @@ import UserCard from "./UserCard";
 
 function UsersList({ users, receiverUsername }: { users: UserCardType[], receiverUsername:string }) {
   return (
-    <div className="space-y-2">
+    <div className="space-y-1">
       {users.map((user) => {
         return (
           <div key={user.id}>

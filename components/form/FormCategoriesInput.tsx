@@ -16,22 +16,22 @@ function FormCategoriesInput({ defaultValue }: { defaultValue?: string }) {
       <Label htmlFor={name} className="capitalize">
         Kategorija
       </Label>
-      <Select
-        defaultValue={defaultValue || ""}
-        name={name}
-        required
-      >
-        <SelectTrigger id={name}>
-          <SelectValue />
-        </SelectTrigger>
-            <SelectContent>
-                {categories.map((item)=>{
-                    return <SelectItem key={item.label} value={item.label}>
-                        {item.label}
-                    </SelectItem>
-                })}
-            </SelectContent>
-      </Select>
+      <div className="mt-1">
+        <Select defaultValue={defaultValue || ""} name={name} required>
+          <SelectTrigger id={name}>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {categories.map((item) => {
+              return (
+                <SelectItem key={item.label} value={item.label}>
+                  {item.label}
+                </SelectItem>
+              );
+            })}
+          </SelectContent>
+        </Select>
+      </div>
     </div>
   );
 }

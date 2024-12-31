@@ -34,7 +34,7 @@ function NavbarSearch() {
     <Input
       type="text"
       placeholder="Mēklēt..."
-      className="max-w-lg dark:bg-muted h-10"
+      className="max-w-md dark:bg-muted h-10"
       value={search}
       onChange={(e)=>{
         setSearch(e.target.value);

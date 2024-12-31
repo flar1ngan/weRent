@@ -6,7 +6,7 @@ type StatsCardType = {
 }
 
 function StatsCard({title, value}:StatsCardType) {
-  return <Card className="bg-muted">
+  return <Card>
     <CardHeader className="flex flex-row justify-between items-center">
         <h3 className="capitalize text-3xl font-semibold">{title}</h3>
         <span className="text-primary text-5xl font-bold">{value}</span>

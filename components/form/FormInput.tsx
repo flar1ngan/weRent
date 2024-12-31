@@ -11,11 +11,11 @@ type FormInputProps = {
 function FormInput(props: FormInputProps) {
   const { name, type, label, defaultValue } = props;
   return (
-    <div className="mb-2">
+    <div className="">
       <Label htmlFor={name} className="capitalize">
         {label || name}
       </Label>
-      <Input id={name} name={name} type={type} defaultValue={defaultValue} required />
+      <Input id={name} name={name} type={type} defaultValue={defaultValue} required className="mt-1" />
     </div>
   );
 }
