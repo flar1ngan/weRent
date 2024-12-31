@@ -10,7 +10,6 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import {
-  getProfile,
   getRentDetails,
   updateItem,
   updateItemImage
