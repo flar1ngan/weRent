@@ -20,24 +20,24 @@ function ChatMessages({
   userId: string;
   receiverImg?: string;
 }) {
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const endOfMessagesRef = useRef<HTMLDivElement | null>(null);
   const [animatedMessages, setAnimatedMessages] = useState<string[]>([]);
   console.log(receiverImg)
 
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
-
     const newMessageIds = messages.map((message) => message.id);
     setAnimatedMessages((prev) => {
       const newMessages = newMessageIds.filter((id) => !prev.includes(id));
       return [...prev, ...newMessages];
     });
+
+    if (endOfMessagesRef.current) {
+      endOfMessagesRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   }, [messages]);
 
   return (
-    <div ref={scrollRef} className="h-full">
+    <div className="h-full">
       {messages.map((message, index) => {
         const messageDate = new Date(message.createdAt);
         const formattedDate = formatDate(messageDate);
@@ -89,6 +89,7 @@ function ChatMessages({
           </div>
         );
       })}
+      <div ref={endOfMessagesRef} />
     </div>
   );
 }
