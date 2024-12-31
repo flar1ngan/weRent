@@ -2,7 +2,7 @@
 
 import { formatDate, formatTime } from "@/utils/format";
 import Image from "next/image";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 type Message = {
   id: string;
@@ -21,11 +21,19 @@ function ChatMessages({
   receiverImg?: string;
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [animatedMessages, setAnimatedMessages] = useState<string[]>([]);
+  console.log(receiverImg)
 
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
+
+    const newMessageIds = messages.map((message) => message.id);
+    setAnimatedMessages((prev) => {
+      const newMessages = newMessageIds.filter((id) => !prev.includes(id));
+      return [...prev, ...newMessages];
+    });
   }, [messages]);
 
   return (
@@ -40,6 +48,7 @@ function ChatMessages({
             messageDate.toDateString();
 
         const isSender = message.senderId === userId;
+        const shouldAnimate = animatedMessages.includes(message.id);
 
         return (
           <div key={`${message.id}-${index}`}>
@@ -69,7 +78,7 @@ function ChatMessages({
                   isSender
                     ? "bg-primary text-primary-foreground rounded-t-xl rounded-bl-xl mr-2"
                     : "bg-secondary text-secondary-foreground rounded-t-xl rounded-br-xl"
-                }`}
+                } ${shouldAnimate ? "animate-slide-in-up" : ""}`}
               >
                 {message.content}
                 <div className="text-xs font-light mt-[6px] text-right">
