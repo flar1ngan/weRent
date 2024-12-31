@@ -2,7 +2,7 @@
 
 import { Input } from "../ui/input";
 import { postMessage } from "@/utils/actions";
-import { MessageSubmitButton, SubmitButton } from "../form/FormButton";
+import { MessageSubmitButton } from "../form/FormButton";
 
 function ChatInput({ receiverId, senderId }: { receiverId: string; senderId: string }) {
   return (

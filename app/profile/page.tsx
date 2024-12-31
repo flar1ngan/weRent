@@ -1,7 +1,5 @@
 import { getAllUserItems, getProfile } from "@/utils/actions";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import ItemsList from "@/components/home/ItemsList";
 import { SheetEdit } from "@/components/profile/SheetEdit";
 import { Card } from "@/components/ui/card";

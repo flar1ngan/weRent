@@ -1,6 +1,7 @@
 "use client";
 
 import { formatDate, formatTime } from "@/utils/format";
+import Image from "next/image";
 import React, { useEffect, useRef } from "react";
 
 type Message = {
@@ -49,20 +50,22 @@ function ChatMessages({
             )}
 
             <div
-              className={`flex ${
+              className={`flex mb-4 ${
                 isSender ? "justify-end mr-2" : "justify-start ml-2"
               } items-end gap-2`}
             >
               {!isSender && receiverImg && (
-                <img
+                <Image
                   src={receiverImg}
                   alt="Receiver Profile"
                   className="w-10 h-10 rounded-full object-cover"
+                  width={30}
+                  height={30}
                 />
               )}
 
               <div
-                className={`max-w-[75%] text-sm mb-4 font-medium shadow px-3 py-3 ${
+                className={`max-w-[75%] text-sm mb-0 font-medium shadow px-3 py-3 ${
                   isSender
                     ? "bg-primary text-primary-foreground rounded-t-xl rounded-bl-xl mr-2"
                     : "bg-secondary text-secondary-foreground rounded-t-xl rounded-br-xl"

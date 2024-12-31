@@ -1,9 +1,8 @@
 import { UserCardType } from "@/utils/types";
 import Image from "next/image";
-import { Card } from "../ui/card";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getLastMessage, getProfile, getUserDetails } from "@/utils/actions";
+import { getLastMessage } from "@/utils/actions";
 import { auth } from "@clerk/nextjs/server";
 
 async function UserCard({

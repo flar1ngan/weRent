@@ -1,6 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Sheet,
   SheetClose,
@@ -15,26 +13,22 @@ import {
   getProfile,
   getRentDetails,
   updateItem,
-  updateItemImage,
-  updateProfile,
-  updateProfileImage,
+  updateItemImage
 } from "@/utils/actions";
 import FormImageContainer from "../form/FormImageContainer";
 import FormContainer from "../form/FormContainer";
 import FormInput from "../form/FormInput";
-import { IconButton, SubmitButton } from "../form/FormButton";
+import { SubmitButton } from "../form/FormButton";
 import { redirect } from "next/navigation";
 import FormPriceInput from "../form/FormPriceInput";
 import FormCategoriesInput from "../form/FormCategoriesInput";
 import FormCitiesInput from "../form/FormCitiesInput";
 import FormDescriptionInput from "../form/FormDescriptionInput";
-import { ScrollArea } from "../ui/scroll-area";
 import { LuPenSquare } from "react-icons/lu";
 
 export async function SheetEditRent({ itemId }: { itemId: string }) {
   const item = await getRentDetails(itemId);
   if (!item) redirect("/");
-  const profile = await getProfile();
   return (
     <Sheet>
       <SheetTrigger asChild>

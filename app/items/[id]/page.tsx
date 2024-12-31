@@ -11,7 +11,6 @@ import {
 } from "@/utils/actions";
 import Description from "@/components/items/Description";
 import { redirect } from "next/navigation";
-import SubmitReview from "@/components/reviews/SubmitReview";
 import ReviewList from "@/components/reviews/ReviewList";
 import { auth } from "@clerk/nextjs/server";
 import dynamic from "next/dynamic";
@@ -50,7 +49,11 @@ async function ItemPage({ params }: { params: { id: string } }) {
         <div className="gap-x-12 mt-6">
           <div>
             <h1 className="text-2xl font-bold mb-1">{item.name}</h1>
+            <div className="flex gap-2">
+
             <ItemRating inPage itemId={item.id} />
+              <FavoriteButton itemId={item.id}  />
+            </div>
             <p className="font-semibold mt-4 mb-2">Publicētājs</p>
             <div className="grid grid-cols-2 gap-x-12 items-center">
               <UserInfo

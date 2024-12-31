@@ -4,6 +4,7 @@ import Comment from "./Comment";
 import { checkAuthor } from "@/utils/actions";
 import DeleteReview from "./DeleteReview";
 import Link from "next/link";
+import Image from "next/image";
 
 type ReviewCardType = {
   reviewDetails: {
@@ -24,10 +25,12 @@ async function ReviewCard({ reviewDetails }: ReviewCardType) {
       <CardHeader>
         <Link href={`/profile/${reviewDetails.username}`}>
           <div className="flex items-center">
-            <img
+            <Image
               src={reviewDetails.profileImg}
               alt="profile"
               className="object-cover w-12 h-12 rounded-full"
+              width={36}
+              height={36}
             />
             <div className="ml-4">
               <h3 className="text-sm font-semibold mb-1">

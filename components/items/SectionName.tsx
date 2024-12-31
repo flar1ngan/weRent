@@ -1,5 +1,3 @@
-import { Separator } from "../ui/separator"
-
 function SectionName({text}:{text:string}) {
   return (
     <>

@@ -43,7 +43,6 @@ export function SubmitButton({
 
 export function MessageSubmitButton({
   className = "",
-  text = "iesniegt",
   size = "default",
 }: SubmitButtonProps) {
   const { pending } = useFormStatus();

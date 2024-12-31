@@ -1,8 +1,6 @@
 import { getUsersSorted } from "@/utils/actions";
 import UsersList from "./UsersList";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
-import Link from "next/link";
-import { Button } from "../ui/button";
 
 async function UsersContainer({
   receiverUsername,
