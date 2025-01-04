@@ -77,7 +77,7 @@ export const reviewSchema = z.object({
   itemId:z.string(),
   rating:z.coerce.number().int().min(1).max(5),
   comment:z.string().min(10, {
-    message: "Atsauksmei jābūt vismaz 10 simboli"
+    message: "Atsauksmē jābūt vismaz 10 simboli"
   }).max(750, {
     message: "Atsauksmei nedrīkst pārsniedz 750 simbolus"
   }),
