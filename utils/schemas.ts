@@ -25,7 +25,9 @@ export const profileSchema = z.object({
 export const messageSchema = z.object({
   senderId: z.string(),
   receiverId: z.string(),
-  content: z.string()
+  content: z.string().max(2000, {
+    message: "Ziņojums nedrīkst pārsniegt 500 simbolus"
+  })
 })
 
 function validateImage() {
