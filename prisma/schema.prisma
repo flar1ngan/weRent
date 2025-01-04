@@ -77,7 +77,6 @@ model Rent {
   totalDays     Int
   startDate     DateTime
   endDate       DateTime
-  paymentStatus Boolean  @default(false)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
